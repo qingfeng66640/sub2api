@@ -14,7 +14,7 @@ import (
 	"github.com/dgraph-io/ristretto"
 )
 
-const apiKeyAuthSnapshotVersion = 12 // v12: include exclusive group authorization fields
+const apiKeyAuthSnapshotVersion = 13 // v13: include API key hedge policy fields
 
 type apiKeyAuthCacheConfig struct {
 	l1Size        int
@@ -220,6 +220,13 @@ func (s *APIKeyService) snapshotFromAPIKey(ctx context.Context, apiKey *APIKey) 
 		RateLimit5h: apiKey.RateLimit5h,
 		RateLimit1d: apiKey.RateLimit1d,
 		RateLimit7d: apiKey.RateLimit7d,
+		AccelerationEnabled:       apiKey.AccelerationEnabled,
+		HedgeEnabled:              apiKey.HedgeEnabled,
+		HedgeInitialParallelCount: apiKey.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         apiKey.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: apiKey.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     apiKey.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        apiKey.HedgeRouteStrategy,
 		User: APIKeyAuthUserSnapshot{
 			ID:                         apiKey.User.ID,
 			Status:                     apiKey.User.Status,
@@ -300,6 +307,13 @@ func (s *APIKeyService) snapshotToAPIKey(key string, snapshot *APIKeyAuthSnapsho
 		RateLimit5h: snapshot.RateLimit5h,
 		RateLimit1d: snapshot.RateLimit1d,
 		RateLimit7d: snapshot.RateLimit7d,
+		AccelerationEnabled:       snapshot.AccelerationEnabled,
+		HedgeEnabled:              snapshot.HedgeEnabled,
+		HedgeInitialParallelCount: snapshot.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         snapshot.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: snapshot.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     snapshot.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        snapshot.HedgeRouteStrategy,
 		User: &User{
 			ID:                         snapshot.User.ID,
 			Status:                     snapshot.User.Status,

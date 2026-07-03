@@ -245,6 +245,7 @@ type OpenAIForwardResult struct {
 	ResponseHeaders    http.Header
 	Duration           time.Duration
 	FirstTokenMs       *int
+	HedgedMeta         *HedgedMetadata
 	ClientDisconnect   bool
 	ImageCount         int
 	ImageSize          string
@@ -3131,7 +3132,7 @@ func (s *OpenAIGatewayService) Forward(ctx context.Context, c *gin.Context, acco
 
 		// Send request
 		upstreamStart := time.Now()
-		resp, err := s.httpUpstream.Do(upstreamReq, proxyURL, account.ID, account.Concurrency)
+		resp, hedgedMeta, err := s.doOpenAIHedgedPreparedHTTP(ctx, c, upstreamReq, proxyURL, account)
 		SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
 		if err != nil {
 			// Transport-level failure (proxy/DNS/TCP/TLS — no HTTP response). Convert to
@@ -3255,6 +3256,7 @@ func (s *OpenAIGatewayService) Forward(ctx context.Context, c *gin.Context, acco
 			OpenAIWSMode:    false,
 			Duration:        time.Since(startTime),
 			FirstTokenMs:    firstTokenMs,
+			HedgedMeta:      hedgedMeta,
 		}
 		if imageCount > 0 {
 			forwardResult.ImageCount = imageCount
@@ -3421,7 +3423,7 @@ func (s *OpenAIGatewayService) forwardOpenAIPassthrough(
 	}
 
 	upstreamStart := time.Now()
-	resp, err := s.httpUpstream.Do(upstreamReq, proxyURL, account.ID, account.Concurrency)
+	resp, hedgedMeta, err := s.doOpenAIHedgedPreparedHTTP(ctx, c, upstreamReq, proxyURL, account)
 	SetOpsLatencyMs(c, OpsUpstreamLatencyMsKey, time.Since(upstreamStart).Milliseconds())
 	if err != nil {
 		// Transport-level failure (proxy/DNS/TCP/TLS — no HTTP response). Convert to
@@ -3489,6 +3491,7 @@ func (s *OpenAIGatewayService) forwardOpenAIPassthrough(
 		OpenAIWSMode:    false,
 		Duration:        time.Since(startTime),
 		FirstTokenMs:    firstTokenMs,
+		HedgedMeta:      hedgedMeta,
 	}
 	if imageCount > 0 {
 		forwardResult.ImageCount = imageCount
@@ -6319,6 +6322,14 @@ func (s *OpenAIGatewayService) RecordUsage(ctx context.Context, input *OpenAIRec
 	usageLog.OpenAIWSMode = result.OpenAIWSMode
 	usageLog.DurationMs = &durationMs
 	usageLog.FirstTokenMs = result.FirstTokenMs
+	if result.HedgedMeta != nil {
+		usageLog.HedgedEnabled = result.HedgedMeta.Enabled
+		usageLog.HedgedAttemptCount = result.HedgedMeta.AttemptCount
+		usageLog.HedgedWinnerIndex = result.HedgedMeta.WinnerIndex
+		usageLog.HedgedCanceledCount = result.HedgedMeta.CanceledCount
+		usageLog.HedgedErrorCount = result.HedgedMeta.ErrorCount
+		usageLog.HedgedAttempts = result.HedgedMeta.Attempts
+	}
 	usageLog.CreatedAt = time.Now()
 	// 设置渠道信息
 	usageLog.ChannelID = optionalInt64Ptr(input.ChannelID)

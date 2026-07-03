@@ -767,6 +767,66 @@
           </div>
         </div>
 
+        <!-- Acceleration / Hedge Section -->
+        <div class="space-y-3 rounded-lg border border-gray-200 p-4 dark:border-dark-700">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <label class="input-label mb-1">{{ t('keys.accelerationPolicy') }}</label>
+              <p class="input-hint">{{ t('keys.accelerationPolicyHint') }}</p>
+            </div>
+            <button
+              type="button"
+              @click="formData.acceleration_enabled = !formData.acceleration_enabled"
+              :class="[
+                'relative inline-flex h-5 w-9 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none',
+                formData.acceleration_enabled ? 'bg-primary-600' : 'bg-gray-200 dark:bg-dark-600'
+              ]"
+            >
+              <span
+                :class="[
+                  'pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out',
+                  formData.acceleration_enabled ? 'translate-x-4' : 'translate-x-0'
+                ]"
+              />
+            </button>
+          </div>
+
+          <div v-if="formData.acceleration_enabled" class="space-y-4 pt-2">
+            <label class="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+              <input v-model="formData.hedge_enabled" type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500" />
+              {{ t('keys.hedgeEnabled') }}
+            </label>
+            <p class="input-hint -mt-2">{{ t('keys.hedgeHint') }}</p>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="input-label">{{ t('keys.hedgeInitialParallelCount') }}</label>
+                <input v-model.number="formData.hedge_initial_parallel_count" type="number" min="1" max="10" class="input" />
+              </div>
+              <div>
+                <label class="input-label">{{ t('keys.hedgeDelaySeconds') }}</label>
+                <input v-model.number="formData.hedge_delay_seconds" type="number" min="0" max="120" step="0.1" class="input" />
+              </div>
+              <div>
+                <label class="input-label">{{ t('keys.hedgeDelayedParallelCount') }}</label>
+                <input v-model.number="formData.hedge_delayed_parallel_count" type="number" min="0" max="10" class="input" />
+              </div>
+              <div>
+                <label class="input-label">{{ t('keys.hedgeMaxParallelCount') }}</label>
+                <input v-model.number="formData.hedge_max_parallel_count" type="number" min="1" max="10" class="input" />
+              </div>
+            </div>
+
+            <div>
+              <label class="input-label">{{ t('keys.hedgeRouteStrategy') }}</label>
+              <select v-model="formData.hedge_route_strategy" class="input">
+                <option value="same_account">{{ t('keys.hedgeSameAccount') }}</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+
         <!-- Expiration Section -->
         <div class="space-y-3">
           <div class="flex items-center justify-between">
@@ -1185,6 +1245,13 @@ const formData = ref({
   rate_limit_5h: null as number | null,
   rate_limit_1d: null as number | null,
   rate_limit_7d: null as number | null,
+  acceleration_enabled: false,
+  hedge_enabled: false,
+  hedge_initial_parallel_count: 1,
+  hedge_delay_seconds: 10,
+  hedge_delayed_parallel_count: 1,
+  hedge_max_parallel_count: 2,
+  hedge_route_strategy: 'same_account',
   enable_expiration: false,
   expiration_preset: '30' as '7' | '30' | '90' | 'custom',
   expiration_date: ''
@@ -1406,6 +1473,13 @@ const editKey = (key: ApiKey) => {
     rate_limit_5h: key.rate_limit_5h || null,
     rate_limit_1d: key.rate_limit_1d || null,
     rate_limit_7d: key.rate_limit_7d || null,
+    acceleration_enabled: key.acceleration_enabled,
+    hedge_enabled: key.hedge_enabled,
+    hedge_initial_parallel_count: key.hedge_initial_parallel_count || 1,
+    hedge_delay_seconds: key.hedge_delay_seconds ?? 10,
+    hedge_delayed_parallel_count: key.hedge_delayed_parallel_count ?? 1,
+    hedge_max_parallel_count: key.hedge_max_parallel_count || 2,
+    hedge_route_strategy: key.hedge_route_strategy || 'same_account',
     enable_expiration: hasExpiration,
     expiration_preset: 'custom',
     expiration_date: key.expires_at ? formatDateTimeLocal(key.expires_at) : ''
@@ -1539,6 +1613,16 @@ const handleSubmit = async () => {
     rate_limit_7d: formData.value.rate_limit_7d && formData.value.rate_limit_7d > 0 ? formData.value.rate_limit_7d : 0,
   } : { rate_limit_5h: 0, rate_limit_1d: 0, rate_limit_7d: 0 }
 
+  const hedgeData = {
+    acceleration_enabled: formData.value.acceleration_enabled,
+    hedge_enabled: formData.value.hedge_enabled,
+    hedge_initial_parallel_count: formData.value.hedge_initial_parallel_count,
+    hedge_delay_seconds: formData.value.hedge_delay_seconds,
+    hedge_delayed_parallel_count: formData.value.hedge_delayed_parallel_count,
+    hedge_max_parallel_count: formData.value.hedge_max_parallel_count,
+    hedge_route_strategy: formData.value.hedge_route_strategy,
+  }
+
   submitting.value = true
   try {
     if (showEditModal.value && selectedKey.value) {
@@ -1553,6 +1637,7 @@ const handleSubmit = async () => {
         rate_limit_5h: rateLimitData.rate_limit_5h,
         rate_limit_1d: rateLimitData.rate_limit_1d,
         rate_limit_7d: rateLimitData.rate_limit_7d,
+        ...hedgeData,
       })
       appStore.showSuccess(t('keys.keyUpdatedSuccess'))
     } else {
@@ -1565,7 +1650,8 @@ const handleSubmit = async () => {
         ipBlacklist,
         quota,
         expiresInDays,
-        rateLimitData
+        rateLimitData,
+        hedgeData
       )
       appStore.showSuccess(t('keys.keyCreatedSuccess'))
       // Only advance tour if active, on submit step, and creation succeeded
@@ -1623,6 +1709,13 @@ const closeModals = () => {
     rate_limit_5h: null,
     rate_limit_1d: null,
     rate_limit_7d: null,
+    acceleration_enabled: false,
+    hedge_enabled: false,
+    hedge_initial_parallel_count: 1,
+    hedge_delay_seconds: 10,
+    hedge_delayed_parallel_count: 1,
+    hedge_max_parallel_count: 2,
+    hedge_route_strategy: 'same_account',
     enable_expiration: false,
     expiration_preset: '30',
     expiration_date: ''

@@ -421,6 +421,82 @@ func (_c *UsageLogCreate) SetNillableFirstTokenMs(v *int) *UsageLogCreate {
 	return _c
 }
 
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (_c *UsageLogCreate) SetHedgedEnabled(v bool) *UsageLogCreate {
+	_c.mutation.SetHedgedEnabled(v)
+	return _c
+}
+
+// SetNillableHedgedEnabled sets the "hedged_enabled" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableHedgedEnabled(v *bool) *UsageLogCreate {
+	if v != nil {
+		_c.SetHedgedEnabled(*v)
+	}
+	return _c
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (_c *UsageLogCreate) SetHedgedAttemptCount(v int) *UsageLogCreate {
+	_c.mutation.SetHedgedAttemptCount(v)
+	return _c
+}
+
+// SetNillableHedgedAttemptCount sets the "hedged_attempt_count" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableHedgedAttemptCount(v *int) *UsageLogCreate {
+	if v != nil {
+		_c.SetHedgedAttemptCount(*v)
+	}
+	return _c
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (_c *UsageLogCreate) SetHedgedWinnerIndex(v int) *UsageLogCreate {
+	_c.mutation.SetHedgedWinnerIndex(v)
+	return _c
+}
+
+// SetNillableHedgedWinnerIndex sets the "hedged_winner_index" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableHedgedWinnerIndex(v *int) *UsageLogCreate {
+	if v != nil {
+		_c.SetHedgedWinnerIndex(*v)
+	}
+	return _c
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (_c *UsageLogCreate) SetHedgedCanceledCount(v int) *UsageLogCreate {
+	_c.mutation.SetHedgedCanceledCount(v)
+	return _c
+}
+
+// SetNillableHedgedCanceledCount sets the "hedged_canceled_count" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableHedgedCanceledCount(v *int) *UsageLogCreate {
+	if v != nil {
+		_c.SetHedgedCanceledCount(*v)
+	}
+	return _c
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (_c *UsageLogCreate) SetHedgedErrorCount(v int) *UsageLogCreate {
+	_c.mutation.SetHedgedErrorCount(v)
+	return _c
+}
+
+// SetNillableHedgedErrorCount sets the "hedged_error_count" field if the given value is not nil.
+func (_c *UsageLogCreate) SetNillableHedgedErrorCount(v *int) *UsageLogCreate {
+	if v != nil {
+		_c.SetHedgedErrorCount(*v)
+	}
+	return _c
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (_c *UsageLogCreate) SetHedgedAttempts(v []map[string]interface{}) *UsageLogCreate {
+	_c.mutation.SetHedgedAttempts(v)
+	return _c
+}
+
 // SetUserAgent sets the "user_agent" field.
 func (_c *UsageLogCreate) SetUserAgent(v string) *UsageLogCreate {
 	_c.mutation.SetUserAgent(v)
@@ -673,6 +749,22 @@ func (_c *UsageLogCreate) defaults() {
 		v := usagelog.DefaultStream
 		_c.mutation.SetStream(v)
 	}
+	if _, ok := _c.mutation.HedgedEnabled(); !ok {
+		v := usagelog.DefaultHedgedEnabled
+		_c.mutation.SetHedgedEnabled(v)
+	}
+	if _, ok := _c.mutation.HedgedAttemptCount(); !ok {
+		v := usagelog.DefaultHedgedAttemptCount
+		_c.mutation.SetHedgedAttemptCount(v)
+	}
+	if _, ok := _c.mutation.HedgedCanceledCount(); !ok {
+		v := usagelog.DefaultHedgedCanceledCount
+		_c.mutation.SetHedgedCanceledCount(v)
+	}
+	if _, ok := _c.mutation.HedgedErrorCount(); !ok {
+		v := usagelog.DefaultHedgedErrorCount
+		_c.mutation.SetHedgedErrorCount(v)
+	}
 	if _, ok := _c.mutation.ImageCount(); !ok {
 		v := usagelog.DefaultImageCount
 		_c.mutation.SetImageCount(v)
@@ -783,6 +875,18 @@ func (_c *UsageLogCreate) check() error {
 	}
 	if _, ok := _c.mutation.Stream(); !ok {
 		return &ValidationError{Name: "stream", err: errors.New(`ent: missing required field "UsageLog.stream"`)}
+	}
+	if _, ok := _c.mutation.HedgedEnabled(); !ok {
+		return &ValidationError{Name: "hedged_enabled", err: errors.New(`ent: missing required field "UsageLog.hedged_enabled"`)}
+	}
+	if _, ok := _c.mutation.HedgedAttemptCount(); !ok {
+		return &ValidationError{Name: "hedged_attempt_count", err: errors.New(`ent: missing required field "UsageLog.hedged_attempt_count"`)}
+	}
+	if _, ok := _c.mutation.HedgedCanceledCount(); !ok {
+		return &ValidationError{Name: "hedged_canceled_count", err: errors.New(`ent: missing required field "UsageLog.hedged_canceled_count"`)}
+	}
+	if _, ok := _c.mutation.HedgedErrorCount(); !ok {
+		return &ValidationError{Name: "hedged_error_count", err: errors.New(`ent: missing required field "UsageLog.hedged_error_count"`)}
 	}
 	if v, ok := _c.mutation.UserAgent(); ok {
 		if err := usagelog.UserAgentValidator(v); err != nil {
@@ -962,6 +1066,30 @@ func (_c *UsageLogCreate) createSpec() (*UsageLog, *sqlgraph.CreateSpec) {
 	if value, ok := _c.mutation.FirstTokenMs(); ok {
 		_spec.SetField(usagelog.FieldFirstTokenMs, field.TypeInt, value)
 		_node.FirstTokenMs = &value
+	}
+	if value, ok := _c.mutation.HedgedEnabled(); ok {
+		_spec.SetField(usagelog.FieldHedgedEnabled, field.TypeBool, value)
+		_node.HedgedEnabled = value
+	}
+	if value, ok := _c.mutation.HedgedAttemptCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttemptCount, field.TypeInt, value)
+		_node.HedgedAttemptCount = value
+	}
+	if value, ok := _c.mutation.HedgedWinnerIndex(); ok {
+		_spec.SetField(usagelog.FieldHedgedWinnerIndex, field.TypeInt, value)
+		_node.HedgedWinnerIndex = &value
+	}
+	if value, ok := _c.mutation.HedgedCanceledCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedCanceledCount, field.TypeInt, value)
+		_node.HedgedCanceledCount = value
+	}
+	if value, ok := _c.mutation.HedgedErrorCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedErrorCount, field.TypeInt, value)
+		_node.HedgedErrorCount = value
+	}
+	if value, ok := _c.mutation.HedgedAttempts(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttempts, field.TypeJSON, value)
+		_node.HedgedAttempts = value
 	}
 	if value, ok := _c.mutation.UserAgent(); ok {
 		_spec.SetField(usagelog.FieldUserAgent, field.TypeString, value)
@@ -1683,6 +1811,114 @@ func (u *UsageLogUpsert) AddFirstTokenMs(v int) *UsageLogUpsert {
 // ClearFirstTokenMs clears the value of the "first_token_ms" field.
 func (u *UsageLogUpsert) ClearFirstTokenMs() *UsageLogUpsert {
 	u.SetNull(usagelog.FieldFirstTokenMs)
+	return u
+}
+
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (u *UsageLogUpsert) SetHedgedEnabled(v bool) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedEnabled, v)
+	return u
+}
+
+// UpdateHedgedEnabled sets the "hedged_enabled" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedEnabled() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedEnabled)
+	return u
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (u *UsageLogUpsert) SetHedgedAttemptCount(v int) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedAttemptCount, v)
+	return u
+}
+
+// UpdateHedgedAttemptCount sets the "hedged_attempt_count" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedAttemptCount() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedAttemptCount)
+	return u
+}
+
+// AddHedgedAttemptCount adds v to the "hedged_attempt_count" field.
+func (u *UsageLogUpsert) AddHedgedAttemptCount(v int) *UsageLogUpsert {
+	u.Add(usagelog.FieldHedgedAttemptCount, v)
+	return u
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (u *UsageLogUpsert) SetHedgedWinnerIndex(v int) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedWinnerIndex, v)
+	return u
+}
+
+// UpdateHedgedWinnerIndex sets the "hedged_winner_index" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedWinnerIndex() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedWinnerIndex)
+	return u
+}
+
+// AddHedgedWinnerIndex adds v to the "hedged_winner_index" field.
+func (u *UsageLogUpsert) AddHedgedWinnerIndex(v int) *UsageLogUpsert {
+	u.Add(usagelog.FieldHedgedWinnerIndex, v)
+	return u
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (u *UsageLogUpsert) ClearHedgedWinnerIndex() *UsageLogUpsert {
+	u.SetNull(usagelog.FieldHedgedWinnerIndex)
+	return u
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (u *UsageLogUpsert) SetHedgedCanceledCount(v int) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedCanceledCount, v)
+	return u
+}
+
+// UpdateHedgedCanceledCount sets the "hedged_canceled_count" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedCanceledCount() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedCanceledCount)
+	return u
+}
+
+// AddHedgedCanceledCount adds v to the "hedged_canceled_count" field.
+func (u *UsageLogUpsert) AddHedgedCanceledCount(v int) *UsageLogUpsert {
+	u.Add(usagelog.FieldHedgedCanceledCount, v)
+	return u
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (u *UsageLogUpsert) SetHedgedErrorCount(v int) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedErrorCount, v)
+	return u
+}
+
+// UpdateHedgedErrorCount sets the "hedged_error_count" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedErrorCount() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedErrorCount)
+	return u
+}
+
+// AddHedgedErrorCount adds v to the "hedged_error_count" field.
+func (u *UsageLogUpsert) AddHedgedErrorCount(v int) *UsageLogUpsert {
+	u.Add(usagelog.FieldHedgedErrorCount, v)
+	return u
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (u *UsageLogUpsert) SetHedgedAttempts(v []map[string]interface{}) *UsageLogUpsert {
+	u.Set(usagelog.FieldHedgedAttempts, v)
+	return u
+}
+
+// UpdateHedgedAttempts sets the "hedged_attempts" field to the value that was provided on create.
+func (u *UsageLogUpsert) UpdateHedgedAttempts() *UsageLogUpsert {
+	u.SetExcluded(usagelog.FieldHedgedAttempts)
+	return u
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (u *UsageLogUpsert) ClearHedgedAttempts() *UsageLogUpsert {
+	u.SetNull(usagelog.FieldHedgedAttempts)
 	return u
 }
 
@@ -2521,6 +2757,132 @@ func (u *UsageLogUpsertOne) UpdateFirstTokenMs() *UsageLogUpsertOne {
 func (u *UsageLogUpsertOne) ClearFirstTokenMs() *UsageLogUpsertOne {
 	return u.Update(func(s *UsageLogUpsert) {
 		s.ClearFirstTokenMs()
+	})
+}
+
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (u *UsageLogUpsertOne) SetHedgedEnabled(v bool) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedEnabled(v)
+	})
+}
+
+// UpdateHedgedEnabled sets the "hedged_enabled" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedEnabled() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedEnabled()
+	})
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (u *UsageLogUpsertOne) SetHedgedAttemptCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedAttemptCount(v)
+	})
+}
+
+// AddHedgedAttemptCount adds v to the "hedged_attempt_count" field.
+func (u *UsageLogUpsertOne) AddHedgedAttemptCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedAttemptCount(v)
+	})
+}
+
+// UpdateHedgedAttemptCount sets the "hedged_attempt_count" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedAttemptCount() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedAttemptCount()
+	})
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (u *UsageLogUpsertOne) SetHedgedWinnerIndex(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedWinnerIndex(v)
+	})
+}
+
+// AddHedgedWinnerIndex adds v to the "hedged_winner_index" field.
+func (u *UsageLogUpsertOne) AddHedgedWinnerIndex(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedWinnerIndex(v)
+	})
+}
+
+// UpdateHedgedWinnerIndex sets the "hedged_winner_index" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedWinnerIndex() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedWinnerIndex()
+	})
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (u *UsageLogUpsertOne) ClearHedgedWinnerIndex() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.ClearHedgedWinnerIndex()
+	})
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (u *UsageLogUpsertOne) SetHedgedCanceledCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedCanceledCount(v)
+	})
+}
+
+// AddHedgedCanceledCount adds v to the "hedged_canceled_count" field.
+func (u *UsageLogUpsertOne) AddHedgedCanceledCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedCanceledCount(v)
+	})
+}
+
+// UpdateHedgedCanceledCount sets the "hedged_canceled_count" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedCanceledCount() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedCanceledCount()
+	})
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (u *UsageLogUpsertOne) SetHedgedErrorCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedErrorCount(v)
+	})
+}
+
+// AddHedgedErrorCount adds v to the "hedged_error_count" field.
+func (u *UsageLogUpsertOne) AddHedgedErrorCount(v int) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedErrorCount(v)
+	})
+}
+
+// UpdateHedgedErrorCount sets the "hedged_error_count" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedErrorCount() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedErrorCount()
+	})
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (u *UsageLogUpsertOne) SetHedgedAttempts(v []map[string]interface{}) *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedAttempts(v)
+	})
+}
+
+// UpdateHedgedAttempts sets the "hedged_attempts" field to the value that was provided on create.
+func (u *UsageLogUpsertOne) UpdateHedgedAttempts() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedAttempts()
+	})
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (u *UsageLogUpsertOne) ClearHedgedAttempts() *UsageLogUpsertOne {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.ClearHedgedAttempts()
 	})
 }
 
@@ -3551,6 +3913,132 @@ func (u *UsageLogUpsertBulk) UpdateFirstTokenMs() *UsageLogUpsertBulk {
 func (u *UsageLogUpsertBulk) ClearFirstTokenMs() *UsageLogUpsertBulk {
 	return u.Update(func(s *UsageLogUpsert) {
 		s.ClearFirstTokenMs()
+	})
+}
+
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (u *UsageLogUpsertBulk) SetHedgedEnabled(v bool) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedEnabled(v)
+	})
+}
+
+// UpdateHedgedEnabled sets the "hedged_enabled" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedEnabled() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedEnabled()
+	})
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (u *UsageLogUpsertBulk) SetHedgedAttemptCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedAttemptCount(v)
+	})
+}
+
+// AddHedgedAttemptCount adds v to the "hedged_attempt_count" field.
+func (u *UsageLogUpsertBulk) AddHedgedAttemptCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedAttemptCount(v)
+	})
+}
+
+// UpdateHedgedAttemptCount sets the "hedged_attempt_count" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedAttemptCount() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedAttemptCount()
+	})
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (u *UsageLogUpsertBulk) SetHedgedWinnerIndex(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedWinnerIndex(v)
+	})
+}
+
+// AddHedgedWinnerIndex adds v to the "hedged_winner_index" field.
+func (u *UsageLogUpsertBulk) AddHedgedWinnerIndex(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedWinnerIndex(v)
+	})
+}
+
+// UpdateHedgedWinnerIndex sets the "hedged_winner_index" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedWinnerIndex() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedWinnerIndex()
+	})
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (u *UsageLogUpsertBulk) ClearHedgedWinnerIndex() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.ClearHedgedWinnerIndex()
+	})
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (u *UsageLogUpsertBulk) SetHedgedCanceledCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedCanceledCount(v)
+	})
+}
+
+// AddHedgedCanceledCount adds v to the "hedged_canceled_count" field.
+func (u *UsageLogUpsertBulk) AddHedgedCanceledCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedCanceledCount(v)
+	})
+}
+
+// UpdateHedgedCanceledCount sets the "hedged_canceled_count" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedCanceledCount() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedCanceledCount()
+	})
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (u *UsageLogUpsertBulk) SetHedgedErrorCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedErrorCount(v)
+	})
+}
+
+// AddHedgedErrorCount adds v to the "hedged_error_count" field.
+func (u *UsageLogUpsertBulk) AddHedgedErrorCount(v int) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.AddHedgedErrorCount(v)
+	})
+}
+
+// UpdateHedgedErrorCount sets the "hedged_error_count" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedErrorCount() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedErrorCount()
+	})
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (u *UsageLogUpsertBulk) SetHedgedAttempts(v []map[string]interface{}) *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.SetHedgedAttempts(v)
+	})
+}
+
+// UpdateHedgedAttempts sets the "hedged_attempts" field to the value that was provided on create.
+func (u *UsageLogUpsertBulk) UpdateHedgedAttempts() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.UpdateHedgedAttempts()
+	})
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (u *UsageLogUpsertBulk) ClearHedgedAttempts() *UsageLogUpsertBulk {
+	return u.Update(func(s *UsageLogUpsert) {
+		s.ClearHedgedAttempts()
 	})
 }
 

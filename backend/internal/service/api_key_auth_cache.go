@@ -26,6 +26,14 @@ type APIKeyAuthSnapshot struct {
 	RateLimit5h float64 `json:"rate_limit_5h"`
 	RateLimit1d float64 `json:"rate_limit_1d"`
 	RateLimit7d float64 `json:"rate_limit_7d"`
+
+	AccelerationEnabled       bool    `json:"acceleration_enabled"`
+	HedgeEnabled              bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        string  `json:"hedge_route_strategy"`
 }
 
 // APIKeyAuthUserSnapshot 用户快照

@@ -37,6 +37,7 @@ var (
 	ErrAPIKeyRateLimit5hExceeded = infraerrors.TooManyRequests("API_KEY_RATE_5H_EXCEEDED", "api key 5小时限额已用完")
 	ErrAPIKeyRateLimit1dExceeded = infraerrors.TooManyRequests("API_KEY_RATE_1D_EXCEEDED", "api key 日限额已用完")
 	ErrAPIKeyRateLimit7dExceeded = infraerrors.TooManyRequests("API_KEY_RATE_7D_EXCEEDED", "api key 7天限额已用完")
+	ErrInvalidHedgePolicy         = infraerrors.BadRequest("INVALID_HEDGE_POLICY", "invalid hedge policy")
 )
 
 const (
@@ -166,6 +167,15 @@ type CreateAPIKeyRequest struct {
 	RateLimit5h float64 `json:"rate_limit_5h"`
 	RateLimit1d float64 `json:"rate_limit_1d"`
 	RateLimit7d float64 `json:"rate_limit_7d"`
+
+	// First-byte hedge policy fields
+	AccelerationEnabled       bool    `json:"acceleration_enabled"`
+	HedgeEnabled              bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        string  `json:"hedge_route_strategy"`
 }
 
 // UpdateAPIKeyRequest 更新API Key请求
@@ -187,6 +197,15 @@ type UpdateAPIKeyRequest struct {
 	RateLimit1d         *float64 `json:"rate_limit_1d"`
 	RateLimit7d         *float64 `json:"rate_limit_7d"`
 	ResetRateLimitUsage *bool    `json:"reset_rate_limit_usage"` // Reset all usage counters to 0
+
+	// First-byte hedge policy fields (nil = no change)
+	AccelerationEnabled       *bool    `json:"acceleration_enabled"`
+	HedgeEnabled              *bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount *int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         *float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount *int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     *int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        *string  `json:"hedge_route_strategy"`
 }
 
 // APIKeyService API Key服务
@@ -328,6 +347,44 @@ func (s *APIKeyService) canUserBindGroup(ctx context.Context, user *User, group 
 	return user.CanBindGroup(group.ID, group.IsExclusive)
 }
 
+func normalizeHedgeCreateRequest(req *CreateAPIKeyRequest) {
+	if req.HedgeInitialParallelCount == 0 {
+		req.HedgeInitialParallelCount = 1
+	}
+	if req.HedgeDelaySeconds == 0 {
+		req.HedgeDelaySeconds = 10
+	}
+	if req.HedgeDelayedParallelCount == 0 {
+		req.HedgeDelayedParallelCount = 1
+	}
+	if req.HedgeMaxParallelCount == 0 {
+		req.HedgeMaxParallelCount = 2
+	}
+	if strings.TrimSpace(req.HedgeRouteStrategy) == "" {
+		req.HedgeRouteStrategy = HedgeRouteStrategySameAccount
+	}
+}
+
+func validateCreateHedgeRequest(req CreateAPIKeyRequest) error {
+	if err := ValidateHedgeConfig(req.HedgeInitialParallelCount, req.HedgeDelaySeconds, req.HedgeDelayedParallelCount, req.HedgeMaxParallelCount, req.HedgeRouteStrategy); err != nil {
+		return fmt.Errorf("%w: %v", ErrInvalidHedgePolicy, err)
+	}
+	return nil
+}
+
+func validateAPIKeyHedgePolicy(apiKey *APIKey) error {
+	if apiKey == nil {
+		return nil
+	}
+	if strings.TrimSpace(apiKey.HedgeRouteStrategy) == "" {
+		apiKey.HedgeRouteStrategy = HedgeRouteStrategySameAccount
+	}
+	if err := ValidateHedgeConfig(apiKey.HedgeInitialParallelCount, apiKey.HedgeDelaySeconds, apiKey.HedgeDelayedParallelCount, apiKey.HedgeMaxParallelCount, apiKey.HedgeRouteStrategy); err != nil {
+		return fmt.Errorf("%w: %v", ErrInvalidHedgePolicy, err)
+	}
+	return nil
+}
+
 // Create 创建API Key
 func (s *APIKeyService) Create(ctx context.Context, userID int64, req CreateAPIKeyRequest) (*APIKey, error) {
 	// 验证用户存在
@@ -348,6 +405,11 @@ func (s *APIKeyService) Create(ctx context.Context, userID int64, req CreateAPIK
 		if invalid := ip.ValidateIPPatterns(req.IPBlacklist); len(invalid) > 0 {
 			return nil, fmt.Errorf("%w: %v", ErrInvalidIPPattern, invalid)
 		}
+	}
+
+	normalizeHedgeCreateRequest(&req)
+	if err := validateCreateHedgeRequest(req); err != nil {
+		return nil, err
 	}
 
 	// 验证分组权限（如果指定了分组）
@@ -412,6 +474,13 @@ func (s *APIKeyService) Create(ctx context.Context, userID int64, req CreateAPIK
 		RateLimit5h: req.RateLimit5h,
 		RateLimit1d: req.RateLimit1d,
 		RateLimit7d: req.RateLimit7d,
+		AccelerationEnabled:       req.AccelerationEnabled,
+		HedgeEnabled:              req.HedgeEnabled,
+		HedgeInitialParallelCount: req.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         req.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: req.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     req.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        req.HedgeRouteStrategy,
 	}
 
 	// Set expiration time if specified
@@ -613,6 +682,30 @@ func (s *APIKeyService) Update(ctx context.Context, id int64, userID int64, req 
 	}
 	if req.RateLimit7d != nil {
 		apiKey.RateLimit7d = *req.RateLimit7d
+	}
+	if req.AccelerationEnabled != nil {
+		apiKey.AccelerationEnabled = *req.AccelerationEnabled
+	}
+	if req.HedgeEnabled != nil {
+		apiKey.HedgeEnabled = *req.HedgeEnabled
+	}
+	if req.HedgeInitialParallelCount != nil {
+		apiKey.HedgeInitialParallelCount = *req.HedgeInitialParallelCount
+	}
+	if req.HedgeDelaySeconds != nil {
+		apiKey.HedgeDelaySeconds = *req.HedgeDelaySeconds
+	}
+	if req.HedgeDelayedParallelCount != nil {
+		apiKey.HedgeDelayedParallelCount = *req.HedgeDelayedParallelCount
+	}
+	if req.HedgeMaxParallelCount != nil {
+		apiKey.HedgeMaxParallelCount = *req.HedgeMaxParallelCount
+	}
+	if req.HedgeRouteStrategy != nil {
+		apiKey.HedgeRouteStrategy = *req.HedgeRouteStrategy
+	}
+	if err := validateAPIKeyHedgePolicy(apiKey); err != nil {
+		return nil, err
 	}
 	resetRateLimit := req.ResetRateLimitUsage != nil && *req.ResetRateLimitUsage
 	if resetRateLimit {

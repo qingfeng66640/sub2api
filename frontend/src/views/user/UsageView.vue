@@ -348,6 +348,24 @@
             <span v-else class="text-sm text-gray-400 dark:text-gray-500">-</span>
           </template>
 
+          <template #cell-hedge="{ row }">
+            <div v-if="row.hedged_enabled" class="group relative inline-flex cursor-help flex-col gap-0.5 text-xs">
+              <span class="inline-flex items-center rounded bg-cyan-100 px-2 py-0.5 font-medium text-cyan-700 dark:bg-cyan-500/20 dark:text-cyan-300">
+                {{ t('usage.hedgeAttempts') }} {{ row.hedged_attempt_count || 1 }}
+              </span>
+              <span class="text-gray-500 dark:text-gray-400">
+                W{{ row.hedged_winner_index ?? '-' }} · C{{ row.hedged_canceled_count || 0 }} · E{{ row.hedged_error_count || 0 }}
+              </span>
+              <div v-if="row.hedged_attempts?.length" class="pointer-events-none absolute left-0 top-full z-50 mt-1 hidden min-w-56 rounded-lg border border-gray-700 bg-gray-900 p-2 text-xs text-white shadow-xl group-hover:block dark:border-gray-600 dark:bg-gray-800">
+                <div v-for="attempt in row.hedged_attempts" :key="attempt.index" class="flex justify-between gap-3 py-0.5">
+                  <span>#{{ attempt.index }} {{ attempt.status }}</span>
+                  <span class="text-gray-300">{{ formatDuration(attempt.first_token_ms ?? attempt.duration_ms ?? null) }}</span>
+                </div>
+              </div>
+            </div>
+            <span v-else class="text-sm text-gray-400 dark:text-gray-500">-</span>
+          </template>
+
           <template #cell-duration="{ row }">
             <span class="text-sm text-gray-600 dark:text-gray-400">{{
               formatDuration(row.duration_ms)
@@ -688,6 +706,7 @@ const columns = computed<Column[]>(() => [
   { key: 'tokens', label: t('usage.tokens'), sortable: false },
   { key: 'cost', label: t('usage.cost'), sortable: false },
   { key: 'first_token', label: t('usage.firstToken'), sortable: false },
+  { key: 'hedge', label: t('usage.hedge'), sortable: false },
   { key: 'duration', label: t('usage.duration'), sortable: false },
   { key: 'created_at', label: t('usage.time'), sortable: true },
   { key: 'user_agent', label: t('usage.userAgent'), sortable: false }

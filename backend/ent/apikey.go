@@ -66,6 +66,20 @@ type APIKey struct {
 	Window1dStart *time.Time `json:"window_1d_start,omitempty"`
 	// Start time of the current 7d rate limit window
 	Window7dStart *time.Time `json:"window_7d_start,omitempty"`
+	// Enable API key level acceleration policy
+	AccelerationEnabled bool `json:"acceleration_enabled,omitempty"`
+	// Enable first-byte hedged racing for this API key
+	HedgeEnabled bool `json:"hedge_enabled,omitempty"`
+	// Initial concurrent upstream request count
+	HedgeInitialParallelCount int `json:"hedge_initial_parallel_count,omitempty"`
+	// Seconds to wait before launching delayed hedge requests
+	HedgeDelaySeconds float64 `json:"hedge_delay_seconds,omitempty"`
+	// Additional upstream request count launched after delay
+	HedgeDelayedParallelCount int `json:"hedge_delayed_parallel_count,omitempty"`
+	// Maximum concurrent upstream request count for one client request
+	HedgeMaxParallelCount int `json:"hedge_max_parallel_count,omitempty"`
+	// Hedged route strategy
+	HedgeRouteStrategy string `json:"hedge_route_strategy,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the APIKeyQuery when eager-loading is set.
 	Edges        APIKeyEdges `json:"edges"`
@@ -123,11 +137,13 @@ func (*APIKey) scanValues(columns []string) ([]any, error) {
 		switch columns[i] {
 		case apikey.FieldIPWhitelist, apikey.FieldIPBlacklist:
 			values[i] = new([]byte)
-		case apikey.FieldQuota, apikey.FieldQuotaUsed, apikey.FieldRateLimit5h, apikey.FieldRateLimit1d, apikey.FieldRateLimit7d, apikey.FieldUsage5h, apikey.FieldUsage1d, apikey.FieldUsage7d:
+		case apikey.FieldAccelerationEnabled, apikey.FieldHedgeEnabled:
+			values[i] = new(sql.NullBool)
+		case apikey.FieldQuota, apikey.FieldQuotaUsed, apikey.FieldRateLimit5h, apikey.FieldRateLimit1d, apikey.FieldRateLimit7d, apikey.FieldUsage5h, apikey.FieldUsage1d, apikey.FieldUsage7d, apikey.FieldHedgeDelaySeconds:
 			values[i] = new(sql.NullFloat64)
-		case apikey.FieldID, apikey.FieldUserID, apikey.FieldGroupID:
+		case apikey.FieldID, apikey.FieldUserID, apikey.FieldGroupID, apikey.FieldHedgeInitialParallelCount, apikey.FieldHedgeDelayedParallelCount, apikey.FieldHedgeMaxParallelCount:
 			values[i] = new(sql.NullInt64)
-		case apikey.FieldKey, apikey.FieldName, apikey.FieldStatus:
+		case apikey.FieldKey, apikey.FieldName, apikey.FieldStatus, apikey.FieldHedgeRouteStrategy:
 			values[i] = new(sql.NullString)
 		case apikey.FieldCreatedAt, apikey.FieldUpdatedAt, apikey.FieldDeletedAt, apikey.FieldLastUsedAt, apikey.FieldExpiresAt, apikey.FieldWindow5hStart, apikey.FieldWindow1dStart, apikey.FieldWindow7dStart:
 			values[i] = new(sql.NullTime)
@@ -301,6 +317,48 @@ func (_m *APIKey) assignValues(columns []string, values []any) error {
 				_m.Window7dStart = new(time.Time)
 				*_m.Window7dStart = value.Time
 			}
+		case apikey.FieldAccelerationEnabled:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field acceleration_enabled", values[i])
+			} else if value.Valid {
+				_m.AccelerationEnabled = value.Bool
+			}
+		case apikey.FieldHedgeEnabled:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_enabled", values[i])
+			} else if value.Valid {
+				_m.HedgeEnabled = value.Bool
+			}
+		case apikey.FieldHedgeInitialParallelCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_initial_parallel_count", values[i])
+			} else if value.Valid {
+				_m.HedgeInitialParallelCount = int(value.Int64)
+			}
+		case apikey.FieldHedgeDelaySeconds:
+			if value, ok := values[i].(*sql.NullFloat64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_delay_seconds", values[i])
+			} else if value.Valid {
+				_m.HedgeDelaySeconds = value.Float64
+			}
+		case apikey.FieldHedgeDelayedParallelCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_delayed_parallel_count", values[i])
+			} else if value.Valid {
+				_m.HedgeDelayedParallelCount = int(value.Int64)
+			}
+		case apikey.FieldHedgeMaxParallelCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_max_parallel_count", values[i])
+			} else if value.Valid {
+				_m.HedgeMaxParallelCount = int(value.Int64)
+			}
+		case apikey.FieldHedgeRouteStrategy:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field hedge_route_strategy", values[i])
+			} else if value.Valid {
+				_m.HedgeRouteStrategy = value.String
+			}
 		default:
 			_m.selectValues.Set(columns[i], values[i])
 		}
@@ -434,6 +492,27 @@ func (_m *APIKey) String() string {
 		builder.WriteString("window_7d_start=")
 		builder.WriteString(v.Format(time.ANSIC))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("acceleration_enabled=")
+	builder.WriteString(fmt.Sprintf("%v", _m.AccelerationEnabled))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_enabled=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgeEnabled))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_initial_parallel_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgeInitialParallelCount))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_delay_seconds=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgeDelaySeconds))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_delayed_parallel_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgeDelayedParallelCount))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_max_parallel_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgeMaxParallelCount))
+	builder.WriteString(", ")
+	builder.WriteString("hedge_route_strategy=")
+	builder.WriteString(_m.HedgeRouteStrategy)
 	builder.WriteByte(')')
 	return builder.String()
 }

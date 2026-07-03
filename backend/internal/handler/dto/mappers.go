@@ -2,6 +2,7 @@
 package dto
 
 import (
+	"encoding/json"
 	"strconv"
 	"time"
 
@@ -79,31 +80,38 @@ func APIKeyFromService(k *service.APIKey) *APIKey {
 		return nil
 	}
 	out := &APIKey{
-		ID:            k.ID,
-		UserID:        k.UserID,
-		Key:           k.Key,
-		Name:          k.Name,
-		GroupID:       k.GroupID,
-		Status:        k.Status,
-		IPWhitelist:   k.IPWhitelist,
-		IPBlacklist:   k.IPBlacklist,
-		LastUsedAt:    k.LastUsedAt,
-		Quota:         k.Quota,
-		QuotaUsed:     k.QuotaUsed,
-		ExpiresAt:     k.ExpiresAt,
-		CreatedAt:     k.CreatedAt,
-		UpdatedAt:     k.UpdatedAt,
-		RateLimit5h:   k.RateLimit5h,
-		RateLimit1d:   k.RateLimit1d,
-		RateLimit7d:   k.RateLimit7d,
-		Usage5h:       k.EffectiveUsage5h(),
-		Usage1d:       k.EffectiveUsage1d(),
-		Usage7d:       k.EffectiveUsage7d(),
-		Window5hStart: k.Window5hStart,
-		Window1dStart: k.Window1dStart,
-		Window7dStart: k.Window7dStart,
-		User:          UserFromServiceShallow(k.User),
-		Group:         GroupFromServiceShallow(k.Group),
+		ID:                        k.ID,
+		UserID:                    k.UserID,
+		Key:                       k.Key,
+		Name:                      k.Name,
+		GroupID:                   k.GroupID,
+		Status:                    k.Status,
+		IPWhitelist:               k.IPWhitelist,
+		IPBlacklist:               k.IPBlacklist,
+		LastUsedAt:                k.LastUsedAt,
+		Quota:                     k.Quota,
+		QuotaUsed:                 k.QuotaUsed,
+		ExpiresAt:                 k.ExpiresAt,
+		CreatedAt:                 k.CreatedAt,
+		UpdatedAt:                 k.UpdatedAt,
+		RateLimit5h:               k.RateLimit5h,
+		RateLimit1d:               k.RateLimit1d,
+		RateLimit7d:               k.RateLimit7d,
+		Usage5h:                   k.EffectiveUsage5h(),
+		Usage1d:                   k.EffectiveUsage1d(),
+		Usage7d:                   k.EffectiveUsage7d(),
+		Window5hStart:             k.Window5hStart,
+		Window1dStart:             k.Window1dStart,
+		Window7dStart:             k.Window7dStart,
+		AccelerationEnabled:       k.AccelerationEnabled,
+		HedgeEnabled:              k.HedgeEnabled,
+		HedgeInitialParallelCount: k.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         k.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: k.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     k.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        k.HedgeRouteStrategy,
+		User:                      UserFromServiceShallow(k.User),
+		Group:                     GroupFromServiceShallow(k.Group),
 	}
 	if k.Window5hStart != nil && !service.IsWindowExpired(k.Window5hStart, service.RateLimitWindow5h) {
 		t := k.Window5hStart.Add(service.RateLimitWindow5h)
@@ -612,6 +620,12 @@ func usageLogFromServiceUser(l *service.UsageLog) UsageLog {
 		OpenAIWSMode:          openAIWSMode,
 		DurationMs:            l.DurationMs,
 		FirstTokenMs:          l.FirstTokenMs,
+		HedgedEnabled:         l.HedgedEnabled,
+		HedgedAttemptCount:    l.HedgedAttemptCount,
+		HedgedWinnerIndex:     l.HedgedWinnerIndex,
+		HedgedCanceledCount:   l.HedgedCanceledCount,
+		HedgedErrorCount:      l.HedgedErrorCount,
+		HedgedAttempts:        hedgedAttemptsToMaps(l.HedgedAttempts),
 		ImageCount:            l.ImageCount,
 		ImageSize:             l.ImageSize,
 		ImageInputSize:        l.ImageInputSize,
@@ -659,6 +673,21 @@ func UsageLogFromServiceAdmin(l *service.UsageLog) *AdminUsageLog {
 		IPAddress:             l.IPAddress,
 		Account:               AccountSummaryFromService(l.Account),
 	}
+}
+
+func hedgedAttemptsToMaps(attempts []service.HedgedAttemptLog) []map[string]any {
+	if len(attempts) == 0 {
+		return nil
+	}
+	payload, err := json.Marshal(attempts)
+	if err != nil {
+		return nil
+	}
+	var out []map[string]any
+	if err := json.Unmarshal(payload, &out); err != nil {
+		return nil
+	}
+	return out
 }
 
 func UsageCleanupTaskFromService(task *service.UsageCleanupTask) *UsageCleanupTask {

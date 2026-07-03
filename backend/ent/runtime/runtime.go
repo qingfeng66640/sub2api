@@ -141,6 +141,36 @@ func init() {
 	apikeyDescUsage7d := apikeyFields[16].Descriptor()
 	// apikey.DefaultUsage7d holds the default value on creation for the usage_7d field.
 	apikey.DefaultUsage7d = apikeyDescUsage7d.Default.(float64)
+	// apikeyDescAccelerationEnabled is the schema descriptor for acceleration_enabled field.
+	apikeyDescAccelerationEnabled := apikeyFields[20].Descriptor()
+	// apikey.DefaultAccelerationEnabled holds the default value on creation for the acceleration_enabled field.
+	apikey.DefaultAccelerationEnabled = apikeyDescAccelerationEnabled.Default.(bool)
+	// apikeyDescHedgeEnabled is the schema descriptor for hedge_enabled field.
+	apikeyDescHedgeEnabled := apikeyFields[21].Descriptor()
+	// apikey.DefaultHedgeEnabled holds the default value on creation for the hedge_enabled field.
+	apikey.DefaultHedgeEnabled = apikeyDescHedgeEnabled.Default.(bool)
+	// apikeyDescHedgeInitialParallelCount is the schema descriptor for hedge_initial_parallel_count field.
+	apikeyDescHedgeInitialParallelCount := apikeyFields[22].Descriptor()
+	// apikey.DefaultHedgeInitialParallelCount holds the default value on creation for the hedge_initial_parallel_count field.
+	apikey.DefaultHedgeInitialParallelCount = apikeyDescHedgeInitialParallelCount.Default.(int)
+	// apikeyDescHedgeDelaySeconds is the schema descriptor for hedge_delay_seconds field.
+	apikeyDescHedgeDelaySeconds := apikeyFields[23].Descriptor()
+	// apikey.DefaultHedgeDelaySeconds holds the default value on creation for the hedge_delay_seconds field.
+	apikey.DefaultHedgeDelaySeconds = apikeyDescHedgeDelaySeconds.Default.(float64)
+	// apikeyDescHedgeDelayedParallelCount is the schema descriptor for hedge_delayed_parallel_count field.
+	apikeyDescHedgeDelayedParallelCount := apikeyFields[24].Descriptor()
+	// apikey.DefaultHedgeDelayedParallelCount holds the default value on creation for the hedge_delayed_parallel_count field.
+	apikey.DefaultHedgeDelayedParallelCount = apikeyDescHedgeDelayedParallelCount.Default.(int)
+	// apikeyDescHedgeMaxParallelCount is the schema descriptor for hedge_max_parallel_count field.
+	apikeyDescHedgeMaxParallelCount := apikeyFields[25].Descriptor()
+	// apikey.DefaultHedgeMaxParallelCount holds the default value on creation for the hedge_max_parallel_count field.
+	apikey.DefaultHedgeMaxParallelCount = apikeyDescHedgeMaxParallelCount.Default.(int)
+	// apikeyDescHedgeRouteStrategy is the schema descriptor for hedge_route_strategy field.
+	apikeyDescHedgeRouteStrategy := apikeyFields[26].Descriptor()
+	// apikey.DefaultHedgeRouteStrategy holds the default value on creation for the hedge_route_strategy field.
+	apikey.DefaultHedgeRouteStrategy = apikeyDescHedgeRouteStrategy.Default.(string)
+	// apikey.HedgeRouteStrategyValidator is a validator for the "hedge_route_strategy" field. It is called by the builders before save.
+	apikey.HedgeRouteStrategyValidator = apikeyDescHedgeRouteStrategy.Validators[0].(func(string) error)
 	accountMixin := schema.Account{}.Mixin()
 	accountMixinHooks1 := accountMixin[1].Hooks()
 	account.Hooks[0] = accountMixinHooks1[0]
@@ -1739,40 +1769,56 @@ func init() {
 	usagelogDescStream := usagelogFields[28].Descriptor()
 	// usagelog.DefaultStream holds the default value on creation for the stream field.
 	usagelog.DefaultStream = usagelogDescStream.Default.(bool)
+	// usagelogDescHedgedEnabled is the schema descriptor for hedged_enabled field.
+	usagelogDescHedgedEnabled := usagelogFields[31].Descriptor()
+	// usagelog.DefaultHedgedEnabled holds the default value on creation for the hedged_enabled field.
+	usagelog.DefaultHedgedEnabled = usagelogDescHedgedEnabled.Default.(bool)
+	// usagelogDescHedgedAttemptCount is the schema descriptor for hedged_attempt_count field.
+	usagelogDescHedgedAttemptCount := usagelogFields[32].Descriptor()
+	// usagelog.DefaultHedgedAttemptCount holds the default value on creation for the hedged_attempt_count field.
+	usagelog.DefaultHedgedAttemptCount = usagelogDescHedgedAttemptCount.Default.(int)
+	// usagelogDescHedgedCanceledCount is the schema descriptor for hedged_canceled_count field.
+	usagelogDescHedgedCanceledCount := usagelogFields[34].Descriptor()
+	// usagelog.DefaultHedgedCanceledCount holds the default value on creation for the hedged_canceled_count field.
+	usagelog.DefaultHedgedCanceledCount = usagelogDescHedgedCanceledCount.Default.(int)
+	// usagelogDescHedgedErrorCount is the schema descriptor for hedged_error_count field.
+	usagelogDescHedgedErrorCount := usagelogFields[35].Descriptor()
+	// usagelog.DefaultHedgedErrorCount holds the default value on creation for the hedged_error_count field.
+	usagelog.DefaultHedgedErrorCount = usagelogDescHedgedErrorCount.Default.(int)
 	// usagelogDescUserAgent is the schema descriptor for user_agent field.
-	usagelogDescUserAgent := usagelogFields[31].Descriptor()
+	usagelogDescUserAgent := usagelogFields[37].Descriptor()
 	// usagelog.UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	usagelog.UserAgentValidator = usagelogDescUserAgent.Validators[0].(func(string) error)
 	// usagelogDescIPAddress is the schema descriptor for ip_address field.
-	usagelogDescIPAddress := usagelogFields[32].Descriptor()
+	usagelogDescIPAddress := usagelogFields[38].Descriptor()
 	// usagelog.IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
 	usagelog.IPAddressValidator = usagelogDescIPAddress.Validators[0].(func(string) error)
 	// usagelogDescImageCount is the schema descriptor for image_count field.
-	usagelogDescImageCount := usagelogFields[33].Descriptor()
+	usagelogDescImageCount := usagelogFields[39].Descriptor()
 	// usagelog.DefaultImageCount holds the default value on creation for the image_count field.
 	usagelog.DefaultImageCount = usagelogDescImageCount.Default.(int)
 	// usagelogDescImageSize is the schema descriptor for image_size field.
-	usagelogDescImageSize := usagelogFields[34].Descriptor()
+	usagelogDescImageSize := usagelogFields[40].Descriptor()
 	// usagelog.ImageSizeValidator is a validator for the "image_size" field. It is called by the builders before save.
 	usagelog.ImageSizeValidator = usagelogDescImageSize.Validators[0].(func(string) error)
 	// usagelogDescImageInputSize is the schema descriptor for image_input_size field.
-	usagelogDescImageInputSize := usagelogFields[35].Descriptor()
+	usagelogDescImageInputSize := usagelogFields[41].Descriptor()
 	// usagelog.ImageInputSizeValidator is a validator for the "image_input_size" field. It is called by the builders before save.
 	usagelog.ImageInputSizeValidator = usagelogDescImageInputSize.Validators[0].(func(string) error)
 	// usagelogDescImageOutputSize is the schema descriptor for image_output_size field.
-	usagelogDescImageOutputSize := usagelogFields[36].Descriptor()
+	usagelogDescImageOutputSize := usagelogFields[42].Descriptor()
 	// usagelog.ImageOutputSizeValidator is a validator for the "image_output_size" field. It is called by the builders before save.
 	usagelog.ImageOutputSizeValidator = usagelogDescImageOutputSize.Validators[0].(func(string) error)
 	// usagelogDescImageSizeSource is the schema descriptor for image_size_source field.
-	usagelogDescImageSizeSource := usagelogFields[37].Descriptor()
+	usagelogDescImageSizeSource := usagelogFields[43].Descriptor()
 	// usagelog.ImageSizeSourceValidator is a validator for the "image_size_source" field. It is called by the builders before save.
 	usagelog.ImageSizeSourceValidator = usagelogDescImageSizeSource.Validators[0].(func(string) error)
 	// usagelogDescCacheTTLOverridden is the schema descriptor for cache_ttl_overridden field.
-	usagelogDescCacheTTLOverridden := usagelogFields[39].Descriptor()
+	usagelogDescCacheTTLOverridden := usagelogFields[45].Descriptor()
 	// usagelog.DefaultCacheTTLOverridden holds the default value on creation for the cache_ttl_overridden field.
 	usagelog.DefaultCacheTTLOverridden = usagelogDescCacheTTLOverridden.Default.(bool)
 	// usagelogDescCreatedAt is the schema descriptor for created_at field.
-	usagelogDescCreatedAt := usagelogFields[40].Descriptor()
+	usagelogDescCreatedAt := usagelogFields[46].Descriptor()
 	// usagelog.DefaultCreatedAt holds the default value on creation for the created_at field.
 	usagelog.DefaultCreatedAt = usagelogDescCreatedAt.Default.(func() time.Time)
 	userMixin := schema.User{}.Mixin()

@@ -76,6 +76,18 @@ const (
 	FieldDurationMs = "duration_ms"
 	// FieldFirstTokenMs holds the string denoting the first_token_ms field in the database.
 	FieldFirstTokenMs = "first_token_ms"
+	// FieldHedgedEnabled holds the string denoting the hedged_enabled field in the database.
+	FieldHedgedEnabled = "hedged_enabled"
+	// FieldHedgedAttemptCount holds the string denoting the hedged_attempt_count field in the database.
+	FieldHedgedAttemptCount = "hedged_attempt_count"
+	// FieldHedgedWinnerIndex holds the string denoting the hedged_winner_index field in the database.
+	FieldHedgedWinnerIndex = "hedged_winner_index"
+	// FieldHedgedCanceledCount holds the string denoting the hedged_canceled_count field in the database.
+	FieldHedgedCanceledCount = "hedged_canceled_count"
+	// FieldHedgedErrorCount holds the string denoting the hedged_error_count field in the database.
+	FieldHedgedErrorCount = "hedged_error_count"
+	// FieldHedgedAttempts holds the string denoting the hedged_attempts field in the database.
+	FieldHedgedAttempts = "hedged_attempts"
 	// FieldUserAgent holds the string denoting the user_agent field in the database.
 	FieldUserAgent = "user_agent"
 	// FieldIPAddress holds the string denoting the ip_address field in the database.
@@ -179,6 +191,12 @@ var Columns = []string{
 	FieldStream,
 	FieldDurationMs,
 	FieldFirstTokenMs,
+	FieldHedgedEnabled,
+	FieldHedgedAttemptCount,
+	FieldHedgedWinnerIndex,
+	FieldHedgedCanceledCount,
+	FieldHedgedErrorCount,
+	FieldHedgedAttempts,
 	FieldUserAgent,
 	FieldIPAddress,
 	FieldImageCount,
@@ -246,6 +264,14 @@ var (
 	DefaultBillingType int8
 	// DefaultStream holds the default value on creation for the "stream" field.
 	DefaultStream bool
+	// DefaultHedgedEnabled holds the default value on creation for the "hedged_enabled" field.
+	DefaultHedgedEnabled bool
+	// DefaultHedgedAttemptCount holds the default value on creation for the "hedged_attempt_count" field.
+	DefaultHedgedAttemptCount int
+	// DefaultHedgedCanceledCount holds the default value on creation for the "hedged_canceled_count" field.
+	DefaultHedgedCanceledCount int
+	// DefaultHedgedErrorCount holds the default value on creation for the "hedged_error_count" field.
+	DefaultHedgedErrorCount int
 	// UserAgentValidator is a validator for the "user_agent" field. It is called by the builders before save.
 	UserAgentValidator func(string) error
 	// IPAddressValidator is a validator for the "ip_address" field. It is called by the builders before save.
@@ -427,6 +453,31 @@ func ByDurationMs(opts ...sql.OrderTermOption) OrderOption {
 // ByFirstTokenMs orders the results by the first_token_ms field.
 func ByFirstTokenMs(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldFirstTokenMs, opts...).ToFunc()
+}
+
+// ByHedgedEnabled orders the results by the hedged_enabled field.
+func ByHedgedEnabled(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgedEnabled, opts...).ToFunc()
+}
+
+// ByHedgedAttemptCount orders the results by the hedged_attempt_count field.
+func ByHedgedAttemptCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgedAttemptCount, opts...).ToFunc()
+}
+
+// ByHedgedWinnerIndex orders the results by the hedged_winner_index field.
+func ByHedgedWinnerIndex(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgedWinnerIndex, opts...).ToFunc()
+}
+
+// ByHedgedCanceledCount orders the results by the hedged_canceled_count field.
+func ByHedgedCanceledCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgedCanceledCount, opts...).ToFunc()
+}
+
+// ByHedgedErrorCount orders the results by the hedged_error_count field.
+func ByHedgedErrorCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgedErrorCount, opts...).ToFunc()
 }
 
 // ByUserAgent orders the results by the user_agent field.

@@ -160,6 +160,41 @@ func Window7dStart(v time.Time) predicate.APIKey {
 	return predicate.APIKey(sql.FieldEQ(FieldWindow7dStart, v))
 }
 
+// AccelerationEnabled applies equality check predicate on the "acceleration_enabled" field. It's identical to AccelerationEnabledEQ.
+func AccelerationEnabled(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldAccelerationEnabled, v))
+}
+
+// HedgeEnabled applies equality check predicate on the "hedge_enabled" field. It's identical to HedgeEnabledEQ.
+func HedgeEnabled(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeEnabled, v))
+}
+
+// HedgeInitialParallelCount applies equality check predicate on the "hedge_initial_parallel_count" field. It's identical to HedgeInitialParallelCountEQ.
+func HedgeInitialParallelCount(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeDelaySeconds applies equality check predicate on the "hedge_delay_seconds" field. It's identical to HedgeDelaySecondsEQ.
+func HedgeDelaySeconds(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelayedParallelCount applies equality check predicate on the "hedge_delayed_parallel_count" field. It's identical to HedgeDelayedParallelCountEQ.
+func HedgeDelayedParallelCount(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeMaxParallelCount applies equality check predicate on the "hedge_max_parallel_count" field. It's identical to HedgeMaxParallelCountEQ.
+func HedgeMaxParallelCount(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeRouteStrategy applies equality check predicate on the "hedge_route_strategy" field. It's identical to HedgeRouteStrategyEQ.
+func HedgeRouteStrategy(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeRouteStrategy, v))
+}
+
 // CreatedAtEQ applies the EQ predicate on the "created_at" field.
 func CreatedAtEQ(v time.Time) predicate.APIKey {
 	return predicate.APIKey(sql.FieldEQ(FieldCreatedAt, v))
@@ -1123,6 +1158,251 @@ func Window7dStartIsNil() predicate.APIKey {
 // Window7dStartNotNil applies the NotNil predicate on the "window_7d_start" field.
 func Window7dStartNotNil() predicate.APIKey {
 	return predicate.APIKey(sql.FieldNotNull(FieldWindow7dStart))
+}
+
+// AccelerationEnabledEQ applies the EQ predicate on the "acceleration_enabled" field.
+func AccelerationEnabledEQ(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldAccelerationEnabled, v))
+}
+
+// AccelerationEnabledNEQ applies the NEQ predicate on the "acceleration_enabled" field.
+func AccelerationEnabledNEQ(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldAccelerationEnabled, v))
+}
+
+// HedgeEnabledEQ applies the EQ predicate on the "hedge_enabled" field.
+func HedgeEnabledEQ(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeEnabled, v))
+}
+
+// HedgeEnabledNEQ applies the NEQ predicate on the "hedge_enabled" field.
+func HedgeEnabledNEQ(v bool) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeEnabled, v))
+}
+
+// HedgeInitialParallelCountEQ applies the EQ predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeInitialParallelCountNEQ applies the NEQ predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountNEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeInitialParallelCountIn applies the In predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldHedgeInitialParallelCount, vs...))
+}
+
+// HedgeInitialParallelCountNotIn applies the NotIn predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountNotIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldHedgeInitialParallelCount, vs...))
+}
+
+// HedgeInitialParallelCountGT applies the GT predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountGT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeInitialParallelCountGTE applies the GTE predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountGTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeInitialParallelCountLT applies the LT predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountLT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeInitialParallelCountLTE applies the LTE predicate on the "hedge_initial_parallel_count" field.
+func HedgeInitialParallelCountLTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldHedgeInitialParallelCount, v))
+}
+
+// HedgeDelaySecondsEQ applies the EQ predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsEQ(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelaySecondsNEQ applies the NEQ predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsNEQ(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelaySecondsIn applies the In predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsIn(vs ...float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldHedgeDelaySeconds, vs...))
+}
+
+// HedgeDelaySecondsNotIn applies the NotIn predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsNotIn(vs ...float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldHedgeDelaySeconds, vs...))
+}
+
+// HedgeDelaySecondsGT applies the GT predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsGT(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelaySecondsGTE applies the GTE predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsGTE(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelaySecondsLT applies the LT predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsLT(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelaySecondsLTE applies the LTE predicate on the "hedge_delay_seconds" field.
+func HedgeDelaySecondsLTE(v float64) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldHedgeDelaySeconds, v))
+}
+
+// HedgeDelayedParallelCountEQ applies the EQ predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeDelayedParallelCountNEQ applies the NEQ predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountNEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeDelayedParallelCountIn applies the In predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldHedgeDelayedParallelCount, vs...))
+}
+
+// HedgeDelayedParallelCountNotIn applies the NotIn predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountNotIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldHedgeDelayedParallelCount, vs...))
+}
+
+// HedgeDelayedParallelCountGT applies the GT predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountGT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeDelayedParallelCountGTE applies the GTE predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountGTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeDelayedParallelCountLT applies the LT predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountLT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeDelayedParallelCountLTE applies the LTE predicate on the "hedge_delayed_parallel_count" field.
+func HedgeDelayedParallelCountLTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldHedgeDelayedParallelCount, v))
+}
+
+// HedgeMaxParallelCountEQ applies the EQ predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeMaxParallelCountNEQ applies the NEQ predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountNEQ(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeMaxParallelCountIn applies the In predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldHedgeMaxParallelCount, vs...))
+}
+
+// HedgeMaxParallelCountNotIn applies the NotIn predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountNotIn(vs ...int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldHedgeMaxParallelCount, vs...))
+}
+
+// HedgeMaxParallelCountGT applies the GT predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountGT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeMaxParallelCountGTE applies the GTE predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountGTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeMaxParallelCountLT applies the LT predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountLT(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeMaxParallelCountLTE applies the LTE predicate on the "hedge_max_parallel_count" field.
+func HedgeMaxParallelCountLTE(v int) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldHedgeMaxParallelCount, v))
+}
+
+// HedgeRouteStrategyEQ applies the EQ predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyEQ(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEQ(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyNEQ applies the NEQ predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyNEQ(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNEQ(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyIn applies the In predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyIn(vs ...string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldIn(FieldHedgeRouteStrategy, vs...))
+}
+
+// HedgeRouteStrategyNotIn applies the NotIn predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyNotIn(vs ...string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldNotIn(FieldHedgeRouteStrategy, vs...))
+}
+
+// HedgeRouteStrategyGT applies the GT predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyGT(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGT(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyGTE applies the GTE predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyGTE(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldGTE(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyLT applies the LT predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyLT(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLT(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyLTE applies the LTE predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyLTE(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldLTE(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyContains applies the Contains predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyContains(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldContains(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyHasPrefix applies the HasPrefix predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyHasPrefix(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldHasPrefix(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyHasSuffix applies the HasSuffix predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyHasSuffix(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldHasSuffix(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyEqualFold applies the EqualFold predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyEqualFold(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldEqualFold(FieldHedgeRouteStrategy, v))
+}
+
+// HedgeRouteStrategyContainsFold applies the ContainsFold predicate on the "hedge_route_strategy" field.
+func HedgeRouteStrategyContainsFold(v string) predicate.APIKey {
+	return predicate.APIKey(sql.FieldContainsFold(FieldHedgeRouteStrategy, v))
 }
 
 // HasUser applies the HasEdge predicate on the "user" edge.

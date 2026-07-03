@@ -100,51 +100,62 @@ const (
 // APIKeyMutation represents an operation that mutates the APIKey nodes in the graph.
 type APIKeyMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int64
-	created_at         *time.Time
-	updated_at         *time.Time
-	deleted_at         *time.Time
-	key                *string
-	name               *string
-	status             *string
-	last_used_at       *time.Time
-	ip_whitelist       *[]string
-	appendip_whitelist []string
-	ip_blacklist       *[]string
-	appendip_blacklist []string
-	quota              *float64
-	addquota           *float64
-	quota_used         *float64
-	addquota_used      *float64
-	expires_at         *time.Time
-	rate_limit_5h      *float64
-	addrate_limit_5h   *float64
-	rate_limit_1d      *float64
-	addrate_limit_1d   *float64
-	rate_limit_7d      *float64
-	addrate_limit_7d   *float64
-	usage_5h           *float64
-	addusage_5h        *float64
-	usage_1d           *float64
-	addusage_1d        *float64
-	usage_7d           *float64
-	addusage_7d        *float64
-	window_5h_start    *time.Time
-	window_1d_start    *time.Time
-	window_7d_start    *time.Time
-	clearedFields      map[string]struct{}
-	user               *int64
-	cleareduser        bool
-	group              *int64
-	clearedgroup       bool
-	usage_logs         map[int64]struct{}
-	removedusage_logs  map[int64]struct{}
-	clearedusage_logs  bool
-	done               bool
-	oldValue           func(context.Context) (*APIKey, error)
-	predicates         []predicate.APIKey
+	op                              Op
+	typ                             string
+	id                              *int64
+	created_at                      *time.Time
+	updated_at                      *time.Time
+	deleted_at                      *time.Time
+	key                             *string
+	name                            *string
+	status                          *string
+	last_used_at                    *time.Time
+	ip_whitelist                    *[]string
+	appendip_whitelist              []string
+	ip_blacklist                    *[]string
+	appendip_blacklist              []string
+	quota                           *float64
+	addquota                        *float64
+	quota_used                      *float64
+	addquota_used                   *float64
+	expires_at                      *time.Time
+	rate_limit_5h                   *float64
+	addrate_limit_5h                *float64
+	rate_limit_1d                   *float64
+	addrate_limit_1d                *float64
+	rate_limit_7d                   *float64
+	addrate_limit_7d                *float64
+	usage_5h                        *float64
+	addusage_5h                     *float64
+	usage_1d                        *float64
+	addusage_1d                     *float64
+	usage_7d                        *float64
+	addusage_7d                     *float64
+	window_5h_start                 *time.Time
+	window_1d_start                 *time.Time
+	window_7d_start                 *time.Time
+	acceleration_enabled            *bool
+	hedge_enabled                   *bool
+	hedge_initial_parallel_count    *int
+	addhedge_initial_parallel_count *int
+	hedge_delay_seconds             *float64
+	addhedge_delay_seconds          *float64
+	hedge_delayed_parallel_count    *int
+	addhedge_delayed_parallel_count *int
+	hedge_max_parallel_count        *int
+	addhedge_max_parallel_count     *int
+	hedge_route_strategy            *string
+	clearedFields                   map[string]struct{}
+	user                            *int64
+	cleareduser                     bool
+	group                           *int64
+	clearedgroup                    bool
+	usage_logs                      map[int64]struct{}
+	removedusage_logs               map[int64]struct{}
+	clearedusage_logs               bool
+	done                            bool
+	oldValue                        func(context.Context) (*APIKey, error)
+	predicates                      []predicate.APIKey
 }
 
 var _ ent.Mutation = (*APIKeyMutation)(nil)
@@ -1382,6 +1393,338 @@ func (m *APIKeyMutation) ResetWindow7dStart() {
 	delete(m.clearedFields, apikey.FieldWindow7dStart)
 }
 
+// SetAccelerationEnabled sets the "acceleration_enabled" field.
+func (m *APIKeyMutation) SetAccelerationEnabled(b bool) {
+	m.acceleration_enabled = &b
+}
+
+// AccelerationEnabled returns the value of the "acceleration_enabled" field in the mutation.
+func (m *APIKeyMutation) AccelerationEnabled() (r bool, exists bool) {
+	v := m.acceleration_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldAccelerationEnabled returns the old "acceleration_enabled" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldAccelerationEnabled(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldAccelerationEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldAccelerationEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldAccelerationEnabled: %w", err)
+	}
+	return oldValue.AccelerationEnabled, nil
+}
+
+// ResetAccelerationEnabled resets all changes to the "acceleration_enabled" field.
+func (m *APIKeyMutation) ResetAccelerationEnabled() {
+	m.acceleration_enabled = nil
+}
+
+// SetHedgeEnabled sets the "hedge_enabled" field.
+func (m *APIKeyMutation) SetHedgeEnabled(b bool) {
+	m.hedge_enabled = &b
+}
+
+// HedgeEnabled returns the value of the "hedge_enabled" field in the mutation.
+func (m *APIKeyMutation) HedgeEnabled() (r bool, exists bool) {
+	v := m.hedge_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeEnabled returns the old "hedge_enabled" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeEnabled(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeEnabled: %w", err)
+	}
+	return oldValue.HedgeEnabled, nil
+}
+
+// ResetHedgeEnabled resets all changes to the "hedge_enabled" field.
+func (m *APIKeyMutation) ResetHedgeEnabled() {
+	m.hedge_enabled = nil
+}
+
+// SetHedgeInitialParallelCount sets the "hedge_initial_parallel_count" field.
+func (m *APIKeyMutation) SetHedgeInitialParallelCount(i int) {
+	m.hedge_initial_parallel_count = &i
+	m.addhedge_initial_parallel_count = nil
+}
+
+// HedgeInitialParallelCount returns the value of the "hedge_initial_parallel_count" field in the mutation.
+func (m *APIKeyMutation) HedgeInitialParallelCount() (r int, exists bool) {
+	v := m.hedge_initial_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeInitialParallelCount returns the old "hedge_initial_parallel_count" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeInitialParallelCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeInitialParallelCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeInitialParallelCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeInitialParallelCount: %w", err)
+	}
+	return oldValue.HedgeInitialParallelCount, nil
+}
+
+// AddHedgeInitialParallelCount adds i to the "hedge_initial_parallel_count" field.
+func (m *APIKeyMutation) AddHedgeInitialParallelCount(i int) {
+	if m.addhedge_initial_parallel_count != nil {
+		*m.addhedge_initial_parallel_count += i
+	} else {
+		m.addhedge_initial_parallel_count = &i
+	}
+}
+
+// AddedHedgeInitialParallelCount returns the value that was added to the "hedge_initial_parallel_count" field in this mutation.
+func (m *APIKeyMutation) AddedHedgeInitialParallelCount() (r int, exists bool) {
+	v := m.addhedge_initial_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgeInitialParallelCount resets all changes to the "hedge_initial_parallel_count" field.
+func (m *APIKeyMutation) ResetHedgeInitialParallelCount() {
+	m.hedge_initial_parallel_count = nil
+	m.addhedge_initial_parallel_count = nil
+}
+
+// SetHedgeDelaySeconds sets the "hedge_delay_seconds" field.
+func (m *APIKeyMutation) SetHedgeDelaySeconds(f float64) {
+	m.hedge_delay_seconds = &f
+	m.addhedge_delay_seconds = nil
+}
+
+// HedgeDelaySeconds returns the value of the "hedge_delay_seconds" field in the mutation.
+func (m *APIKeyMutation) HedgeDelaySeconds() (r float64, exists bool) {
+	v := m.hedge_delay_seconds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeDelaySeconds returns the old "hedge_delay_seconds" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeDelaySeconds(ctx context.Context) (v float64, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeDelaySeconds is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeDelaySeconds requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeDelaySeconds: %w", err)
+	}
+	return oldValue.HedgeDelaySeconds, nil
+}
+
+// AddHedgeDelaySeconds adds f to the "hedge_delay_seconds" field.
+func (m *APIKeyMutation) AddHedgeDelaySeconds(f float64) {
+	if m.addhedge_delay_seconds != nil {
+		*m.addhedge_delay_seconds += f
+	} else {
+		m.addhedge_delay_seconds = &f
+	}
+}
+
+// AddedHedgeDelaySeconds returns the value that was added to the "hedge_delay_seconds" field in this mutation.
+func (m *APIKeyMutation) AddedHedgeDelaySeconds() (r float64, exists bool) {
+	v := m.addhedge_delay_seconds
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgeDelaySeconds resets all changes to the "hedge_delay_seconds" field.
+func (m *APIKeyMutation) ResetHedgeDelaySeconds() {
+	m.hedge_delay_seconds = nil
+	m.addhedge_delay_seconds = nil
+}
+
+// SetHedgeDelayedParallelCount sets the "hedge_delayed_parallel_count" field.
+func (m *APIKeyMutation) SetHedgeDelayedParallelCount(i int) {
+	m.hedge_delayed_parallel_count = &i
+	m.addhedge_delayed_parallel_count = nil
+}
+
+// HedgeDelayedParallelCount returns the value of the "hedge_delayed_parallel_count" field in the mutation.
+func (m *APIKeyMutation) HedgeDelayedParallelCount() (r int, exists bool) {
+	v := m.hedge_delayed_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeDelayedParallelCount returns the old "hedge_delayed_parallel_count" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeDelayedParallelCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeDelayedParallelCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeDelayedParallelCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeDelayedParallelCount: %w", err)
+	}
+	return oldValue.HedgeDelayedParallelCount, nil
+}
+
+// AddHedgeDelayedParallelCount adds i to the "hedge_delayed_parallel_count" field.
+func (m *APIKeyMutation) AddHedgeDelayedParallelCount(i int) {
+	if m.addhedge_delayed_parallel_count != nil {
+		*m.addhedge_delayed_parallel_count += i
+	} else {
+		m.addhedge_delayed_parallel_count = &i
+	}
+}
+
+// AddedHedgeDelayedParallelCount returns the value that was added to the "hedge_delayed_parallel_count" field in this mutation.
+func (m *APIKeyMutation) AddedHedgeDelayedParallelCount() (r int, exists bool) {
+	v := m.addhedge_delayed_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgeDelayedParallelCount resets all changes to the "hedge_delayed_parallel_count" field.
+func (m *APIKeyMutation) ResetHedgeDelayedParallelCount() {
+	m.hedge_delayed_parallel_count = nil
+	m.addhedge_delayed_parallel_count = nil
+}
+
+// SetHedgeMaxParallelCount sets the "hedge_max_parallel_count" field.
+func (m *APIKeyMutation) SetHedgeMaxParallelCount(i int) {
+	m.hedge_max_parallel_count = &i
+	m.addhedge_max_parallel_count = nil
+}
+
+// HedgeMaxParallelCount returns the value of the "hedge_max_parallel_count" field in the mutation.
+func (m *APIKeyMutation) HedgeMaxParallelCount() (r int, exists bool) {
+	v := m.hedge_max_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeMaxParallelCount returns the old "hedge_max_parallel_count" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeMaxParallelCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeMaxParallelCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeMaxParallelCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeMaxParallelCount: %w", err)
+	}
+	return oldValue.HedgeMaxParallelCount, nil
+}
+
+// AddHedgeMaxParallelCount adds i to the "hedge_max_parallel_count" field.
+func (m *APIKeyMutation) AddHedgeMaxParallelCount(i int) {
+	if m.addhedge_max_parallel_count != nil {
+		*m.addhedge_max_parallel_count += i
+	} else {
+		m.addhedge_max_parallel_count = &i
+	}
+}
+
+// AddedHedgeMaxParallelCount returns the value that was added to the "hedge_max_parallel_count" field in this mutation.
+func (m *APIKeyMutation) AddedHedgeMaxParallelCount() (r int, exists bool) {
+	v := m.addhedge_max_parallel_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgeMaxParallelCount resets all changes to the "hedge_max_parallel_count" field.
+func (m *APIKeyMutation) ResetHedgeMaxParallelCount() {
+	m.hedge_max_parallel_count = nil
+	m.addhedge_max_parallel_count = nil
+}
+
+// SetHedgeRouteStrategy sets the "hedge_route_strategy" field.
+func (m *APIKeyMutation) SetHedgeRouteStrategy(s string) {
+	m.hedge_route_strategy = &s
+}
+
+// HedgeRouteStrategy returns the value of the "hedge_route_strategy" field in the mutation.
+func (m *APIKeyMutation) HedgeRouteStrategy() (r string, exists bool) {
+	v := m.hedge_route_strategy
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgeRouteStrategy returns the old "hedge_route_strategy" field's value of the APIKey entity.
+// If the APIKey object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *APIKeyMutation) OldHedgeRouteStrategy(ctx context.Context) (v string, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgeRouteStrategy is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgeRouteStrategy requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgeRouteStrategy: %w", err)
+	}
+	return oldValue.HedgeRouteStrategy, nil
+}
+
+// ResetHedgeRouteStrategy resets all changes to the "hedge_route_strategy" field.
+func (m *APIKeyMutation) ResetHedgeRouteStrategy() {
+	m.hedge_route_strategy = nil
+}
+
 // ClearUser clears the "user" edge to the User entity.
 func (m *APIKeyMutation) ClearUser() {
 	m.cleareduser = true
@@ -1524,7 +1867,7 @@ func (m *APIKeyMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *APIKeyMutation) Fields() []string {
-	fields := make([]string, 0, 23)
+	fields := make([]string, 0, 30)
 	if m.created_at != nil {
 		fields = append(fields, apikey.FieldCreatedAt)
 	}
@@ -1594,6 +1937,27 @@ func (m *APIKeyMutation) Fields() []string {
 	if m.window_7d_start != nil {
 		fields = append(fields, apikey.FieldWindow7dStart)
 	}
+	if m.acceleration_enabled != nil {
+		fields = append(fields, apikey.FieldAccelerationEnabled)
+	}
+	if m.hedge_enabled != nil {
+		fields = append(fields, apikey.FieldHedgeEnabled)
+	}
+	if m.hedge_initial_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeInitialParallelCount)
+	}
+	if m.hedge_delay_seconds != nil {
+		fields = append(fields, apikey.FieldHedgeDelaySeconds)
+	}
+	if m.hedge_delayed_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeDelayedParallelCount)
+	}
+	if m.hedge_max_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeMaxParallelCount)
+	}
+	if m.hedge_route_strategy != nil {
+		fields = append(fields, apikey.FieldHedgeRouteStrategy)
+	}
 	return fields
 }
 
@@ -1648,6 +2012,20 @@ func (m *APIKeyMutation) Field(name string) (ent.Value, bool) {
 		return m.Window1dStart()
 	case apikey.FieldWindow7dStart:
 		return m.Window7dStart()
+	case apikey.FieldAccelerationEnabled:
+		return m.AccelerationEnabled()
+	case apikey.FieldHedgeEnabled:
+		return m.HedgeEnabled()
+	case apikey.FieldHedgeInitialParallelCount:
+		return m.HedgeInitialParallelCount()
+	case apikey.FieldHedgeDelaySeconds:
+		return m.HedgeDelaySeconds()
+	case apikey.FieldHedgeDelayedParallelCount:
+		return m.HedgeDelayedParallelCount()
+	case apikey.FieldHedgeMaxParallelCount:
+		return m.HedgeMaxParallelCount()
+	case apikey.FieldHedgeRouteStrategy:
+		return m.HedgeRouteStrategy()
 	}
 	return nil, false
 }
@@ -1703,6 +2081,20 @@ func (m *APIKeyMutation) OldField(ctx context.Context, name string) (ent.Value, 
 		return m.OldWindow1dStart(ctx)
 	case apikey.FieldWindow7dStart:
 		return m.OldWindow7dStart(ctx)
+	case apikey.FieldAccelerationEnabled:
+		return m.OldAccelerationEnabled(ctx)
+	case apikey.FieldHedgeEnabled:
+		return m.OldHedgeEnabled(ctx)
+	case apikey.FieldHedgeInitialParallelCount:
+		return m.OldHedgeInitialParallelCount(ctx)
+	case apikey.FieldHedgeDelaySeconds:
+		return m.OldHedgeDelaySeconds(ctx)
+	case apikey.FieldHedgeDelayedParallelCount:
+		return m.OldHedgeDelayedParallelCount(ctx)
+	case apikey.FieldHedgeMaxParallelCount:
+		return m.OldHedgeMaxParallelCount(ctx)
+	case apikey.FieldHedgeRouteStrategy:
+		return m.OldHedgeRouteStrategy(ctx)
 	}
 	return nil, fmt.Errorf("unknown APIKey field %s", name)
 }
@@ -1873,6 +2265,55 @@ func (m *APIKeyMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetWindow7dStart(v)
 		return nil
+	case apikey.FieldAccelerationEnabled:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetAccelerationEnabled(v)
+		return nil
+	case apikey.FieldHedgeEnabled:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeEnabled(v)
+		return nil
+	case apikey.FieldHedgeInitialParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeInitialParallelCount(v)
+		return nil
+	case apikey.FieldHedgeDelaySeconds:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeDelaySeconds(v)
+		return nil
+	case apikey.FieldHedgeDelayedParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeDelayedParallelCount(v)
+		return nil
+	case apikey.FieldHedgeMaxParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeMaxParallelCount(v)
+		return nil
+	case apikey.FieldHedgeRouteStrategy:
+		v, ok := value.(string)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgeRouteStrategy(v)
+		return nil
 	}
 	return fmt.Errorf("unknown APIKey field %s", name)
 }
@@ -1905,6 +2346,18 @@ func (m *APIKeyMutation) AddedFields() []string {
 	if m.addusage_7d != nil {
 		fields = append(fields, apikey.FieldUsage7d)
 	}
+	if m.addhedge_initial_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeInitialParallelCount)
+	}
+	if m.addhedge_delay_seconds != nil {
+		fields = append(fields, apikey.FieldHedgeDelaySeconds)
+	}
+	if m.addhedge_delayed_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeDelayedParallelCount)
+	}
+	if m.addhedge_max_parallel_count != nil {
+		fields = append(fields, apikey.FieldHedgeMaxParallelCount)
+	}
 	return fields
 }
 
@@ -1929,6 +2382,14 @@ func (m *APIKeyMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedUsage1d()
 	case apikey.FieldUsage7d:
 		return m.AddedUsage7d()
+	case apikey.FieldHedgeInitialParallelCount:
+		return m.AddedHedgeInitialParallelCount()
+	case apikey.FieldHedgeDelaySeconds:
+		return m.AddedHedgeDelaySeconds()
+	case apikey.FieldHedgeDelayedParallelCount:
+		return m.AddedHedgeDelayedParallelCount()
+	case apikey.FieldHedgeMaxParallelCount:
+		return m.AddedHedgeMaxParallelCount()
 	}
 	return nil, false
 }
@@ -1993,6 +2454,34 @@ func (m *APIKeyMutation) AddField(name string, value ent.Value) error {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.AddUsage7d(v)
+		return nil
+	case apikey.FieldHedgeInitialParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgeInitialParallelCount(v)
+		return nil
+	case apikey.FieldHedgeDelaySeconds:
+		v, ok := value.(float64)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgeDelaySeconds(v)
+		return nil
+	case apikey.FieldHedgeDelayedParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgeDelayedParallelCount(v)
+		return nil
+	case apikey.FieldHedgeMaxParallelCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgeMaxParallelCount(v)
 		return nil
 	}
 	return fmt.Errorf("unknown APIKey numeric field %s", name)
@@ -2146,6 +2635,27 @@ func (m *APIKeyMutation) ResetField(name string) error {
 		return nil
 	case apikey.FieldWindow7dStart:
 		m.ResetWindow7dStart()
+		return nil
+	case apikey.FieldAccelerationEnabled:
+		m.ResetAccelerationEnabled()
+		return nil
+	case apikey.FieldHedgeEnabled:
+		m.ResetHedgeEnabled()
+		return nil
+	case apikey.FieldHedgeInitialParallelCount:
+		m.ResetHedgeInitialParallelCount()
+		return nil
+	case apikey.FieldHedgeDelaySeconds:
+		m.ResetHedgeDelaySeconds()
+		return nil
+	case apikey.FieldHedgeDelayedParallelCount:
+		m.ResetHedgeDelayedParallelCount()
+		return nil
+	case apikey.FieldHedgeMaxParallelCount:
+		m.ResetHedgeMaxParallelCount()
+		return nil
+	case apikey.FieldHedgeRouteStrategy:
+		m.ResetHedgeRouteStrategy()
 		return nil
 	}
 	return fmt.Errorf("unknown APIKey field %s", name)
@@ -35019,6 +35529,17 @@ type UsageLogMutation struct {
 	addduration_ms              *int
 	first_token_ms              *int
 	addfirst_token_ms           *int
+	hedged_enabled              *bool
+	hedged_attempt_count        *int
+	addhedged_attempt_count     *int
+	hedged_winner_index         *int
+	addhedged_winner_index      *int
+	hedged_canceled_count       *int
+	addhedged_canceled_count    *int
+	hedged_error_count          *int
+	addhedged_error_count       *int
+	hedged_attempts             *[]map[string]interface{}
+	appendhedged_attempts       []map[string]interface{}
 	user_agent                  *string
 	ip_address                  *string
 	image_count                 *int
@@ -36767,6 +37288,345 @@ func (m *UsageLogMutation) ResetFirstTokenMs() {
 	delete(m.clearedFields, usagelog.FieldFirstTokenMs)
 }
 
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (m *UsageLogMutation) SetHedgedEnabled(b bool) {
+	m.hedged_enabled = &b
+}
+
+// HedgedEnabled returns the value of the "hedged_enabled" field in the mutation.
+func (m *UsageLogMutation) HedgedEnabled() (r bool, exists bool) {
+	v := m.hedged_enabled
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedEnabled returns the old "hedged_enabled" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedEnabled(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedEnabled is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedEnabled requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedEnabled: %w", err)
+	}
+	return oldValue.HedgedEnabled, nil
+}
+
+// ResetHedgedEnabled resets all changes to the "hedged_enabled" field.
+func (m *UsageLogMutation) ResetHedgedEnabled() {
+	m.hedged_enabled = nil
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (m *UsageLogMutation) SetHedgedAttemptCount(i int) {
+	m.hedged_attempt_count = &i
+	m.addhedged_attempt_count = nil
+}
+
+// HedgedAttemptCount returns the value of the "hedged_attempt_count" field in the mutation.
+func (m *UsageLogMutation) HedgedAttemptCount() (r int, exists bool) {
+	v := m.hedged_attempt_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedAttemptCount returns the old "hedged_attempt_count" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedAttemptCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedAttemptCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedAttemptCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedAttemptCount: %w", err)
+	}
+	return oldValue.HedgedAttemptCount, nil
+}
+
+// AddHedgedAttemptCount adds i to the "hedged_attempt_count" field.
+func (m *UsageLogMutation) AddHedgedAttemptCount(i int) {
+	if m.addhedged_attempt_count != nil {
+		*m.addhedged_attempt_count += i
+	} else {
+		m.addhedged_attempt_count = &i
+	}
+}
+
+// AddedHedgedAttemptCount returns the value that was added to the "hedged_attempt_count" field in this mutation.
+func (m *UsageLogMutation) AddedHedgedAttemptCount() (r int, exists bool) {
+	v := m.addhedged_attempt_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgedAttemptCount resets all changes to the "hedged_attempt_count" field.
+func (m *UsageLogMutation) ResetHedgedAttemptCount() {
+	m.hedged_attempt_count = nil
+	m.addhedged_attempt_count = nil
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (m *UsageLogMutation) SetHedgedWinnerIndex(i int) {
+	m.hedged_winner_index = &i
+	m.addhedged_winner_index = nil
+}
+
+// HedgedWinnerIndex returns the value of the "hedged_winner_index" field in the mutation.
+func (m *UsageLogMutation) HedgedWinnerIndex() (r int, exists bool) {
+	v := m.hedged_winner_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedWinnerIndex returns the old "hedged_winner_index" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedWinnerIndex(ctx context.Context) (v *int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedWinnerIndex is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedWinnerIndex requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedWinnerIndex: %w", err)
+	}
+	return oldValue.HedgedWinnerIndex, nil
+}
+
+// AddHedgedWinnerIndex adds i to the "hedged_winner_index" field.
+func (m *UsageLogMutation) AddHedgedWinnerIndex(i int) {
+	if m.addhedged_winner_index != nil {
+		*m.addhedged_winner_index += i
+	} else {
+		m.addhedged_winner_index = &i
+	}
+}
+
+// AddedHedgedWinnerIndex returns the value that was added to the "hedged_winner_index" field in this mutation.
+func (m *UsageLogMutation) AddedHedgedWinnerIndex() (r int, exists bool) {
+	v := m.addhedged_winner_index
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (m *UsageLogMutation) ClearHedgedWinnerIndex() {
+	m.hedged_winner_index = nil
+	m.addhedged_winner_index = nil
+	m.clearedFields[usagelog.FieldHedgedWinnerIndex] = struct{}{}
+}
+
+// HedgedWinnerIndexCleared returns if the "hedged_winner_index" field was cleared in this mutation.
+func (m *UsageLogMutation) HedgedWinnerIndexCleared() bool {
+	_, ok := m.clearedFields[usagelog.FieldHedgedWinnerIndex]
+	return ok
+}
+
+// ResetHedgedWinnerIndex resets all changes to the "hedged_winner_index" field.
+func (m *UsageLogMutation) ResetHedgedWinnerIndex() {
+	m.hedged_winner_index = nil
+	m.addhedged_winner_index = nil
+	delete(m.clearedFields, usagelog.FieldHedgedWinnerIndex)
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (m *UsageLogMutation) SetHedgedCanceledCount(i int) {
+	m.hedged_canceled_count = &i
+	m.addhedged_canceled_count = nil
+}
+
+// HedgedCanceledCount returns the value of the "hedged_canceled_count" field in the mutation.
+func (m *UsageLogMutation) HedgedCanceledCount() (r int, exists bool) {
+	v := m.hedged_canceled_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedCanceledCount returns the old "hedged_canceled_count" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedCanceledCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedCanceledCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedCanceledCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedCanceledCount: %w", err)
+	}
+	return oldValue.HedgedCanceledCount, nil
+}
+
+// AddHedgedCanceledCount adds i to the "hedged_canceled_count" field.
+func (m *UsageLogMutation) AddHedgedCanceledCount(i int) {
+	if m.addhedged_canceled_count != nil {
+		*m.addhedged_canceled_count += i
+	} else {
+		m.addhedged_canceled_count = &i
+	}
+}
+
+// AddedHedgedCanceledCount returns the value that was added to the "hedged_canceled_count" field in this mutation.
+func (m *UsageLogMutation) AddedHedgedCanceledCount() (r int, exists bool) {
+	v := m.addhedged_canceled_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgedCanceledCount resets all changes to the "hedged_canceled_count" field.
+func (m *UsageLogMutation) ResetHedgedCanceledCount() {
+	m.hedged_canceled_count = nil
+	m.addhedged_canceled_count = nil
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (m *UsageLogMutation) SetHedgedErrorCount(i int) {
+	m.hedged_error_count = &i
+	m.addhedged_error_count = nil
+}
+
+// HedgedErrorCount returns the value of the "hedged_error_count" field in the mutation.
+func (m *UsageLogMutation) HedgedErrorCount() (r int, exists bool) {
+	v := m.hedged_error_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedErrorCount returns the old "hedged_error_count" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedErrorCount(ctx context.Context) (v int, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedErrorCount is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedErrorCount requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedErrorCount: %w", err)
+	}
+	return oldValue.HedgedErrorCount, nil
+}
+
+// AddHedgedErrorCount adds i to the "hedged_error_count" field.
+func (m *UsageLogMutation) AddHedgedErrorCount(i int) {
+	if m.addhedged_error_count != nil {
+		*m.addhedged_error_count += i
+	} else {
+		m.addhedged_error_count = &i
+	}
+}
+
+// AddedHedgedErrorCount returns the value that was added to the "hedged_error_count" field in this mutation.
+func (m *UsageLogMutation) AddedHedgedErrorCount() (r int, exists bool) {
+	v := m.addhedged_error_count
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// ResetHedgedErrorCount resets all changes to the "hedged_error_count" field.
+func (m *UsageLogMutation) ResetHedgedErrorCount() {
+	m.hedged_error_count = nil
+	m.addhedged_error_count = nil
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (m *UsageLogMutation) SetHedgedAttempts(value []map[string]interface{}) {
+	m.hedged_attempts = &value
+	m.appendhedged_attempts = nil
+}
+
+// HedgedAttempts returns the value of the "hedged_attempts" field in the mutation.
+func (m *UsageLogMutation) HedgedAttempts() (r []map[string]interface{}, exists bool) {
+	v := m.hedged_attempts
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldHedgedAttempts returns the old "hedged_attempts" field's value of the UsageLog entity.
+// If the UsageLog object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *UsageLogMutation) OldHedgedAttempts(ctx context.Context) (v []map[string]interface{}, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldHedgedAttempts is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldHedgedAttempts requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldHedgedAttempts: %w", err)
+	}
+	return oldValue.HedgedAttempts, nil
+}
+
+// AppendHedgedAttempts adds value to the "hedged_attempts" field.
+func (m *UsageLogMutation) AppendHedgedAttempts(value []map[string]interface{}) {
+	m.appendhedged_attempts = append(m.appendhedged_attempts, value...)
+}
+
+// AppendedHedgedAttempts returns the list of values that were appended to the "hedged_attempts" field in this mutation.
+func (m *UsageLogMutation) AppendedHedgedAttempts() ([]map[string]interface{}, bool) {
+	if len(m.appendhedged_attempts) == 0 {
+		return nil, false
+	}
+	return m.appendhedged_attempts, true
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (m *UsageLogMutation) ClearHedgedAttempts() {
+	m.hedged_attempts = nil
+	m.appendhedged_attempts = nil
+	m.clearedFields[usagelog.FieldHedgedAttempts] = struct{}{}
+}
+
+// HedgedAttemptsCleared returns if the "hedged_attempts" field was cleared in this mutation.
+func (m *UsageLogMutation) HedgedAttemptsCleared() bool {
+	_, ok := m.clearedFields[usagelog.FieldHedgedAttempts]
+	return ok
+}
+
+// ResetHedgedAttempts resets all changes to the "hedged_attempts" field.
+func (m *UsageLogMutation) ResetHedgedAttempts() {
+	m.hedged_attempts = nil
+	m.appendhedged_attempts = nil
+	delete(m.clearedFields, usagelog.FieldHedgedAttempts)
+}
+
 // SetUserAgent sets the "user_agent" field.
 func (m *UsageLogMutation) SetUserAgent(s string) {
 	m.user_agent = &s
@@ -37407,7 +38267,7 @@ func (m *UsageLogMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *UsageLogMutation) Fields() []string {
-	fields := make([]string, 0, 41)
+	fields := make([]string, 0, 47)
 	if m.user != nil {
 		fields = append(fields, usagelog.FieldUserID)
 	}
@@ -37500,6 +38360,24 @@ func (m *UsageLogMutation) Fields() []string {
 	}
 	if m.first_token_ms != nil {
 		fields = append(fields, usagelog.FieldFirstTokenMs)
+	}
+	if m.hedged_enabled != nil {
+		fields = append(fields, usagelog.FieldHedgedEnabled)
+	}
+	if m.hedged_attempt_count != nil {
+		fields = append(fields, usagelog.FieldHedgedAttemptCount)
+	}
+	if m.hedged_winner_index != nil {
+		fields = append(fields, usagelog.FieldHedgedWinnerIndex)
+	}
+	if m.hedged_canceled_count != nil {
+		fields = append(fields, usagelog.FieldHedgedCanceledCount)
+	}
+	if m.hedged_error_count != nil {
+		fields = append(fields, usagelog.FieldHedgedErrorCount)
+	}
+	if m.hedged_attempts != nil {
+		fields = append(fields, usagelog.FieldHedgedAttempts)
 	}
 	if m.user_agent != nil {
 		fields = append(fields, usagelog.FieldUserAgent)
@@ -37601,6 +38479,18 @@ func (m *UsageLogMutation) Field(name string) (ent.Value, bool) {
 		return m.DurationMs()
 	case usagelog.FieldFirstTokenMs:
 		return m.FirstTokenMs()
+	case usagelog.FieldHedgedEnabled:
+		return m.HedgedEnabled()
+	case usagelog.FieldHedgedAttemptCount:
+		return m.HedgedAttemptCount()
+	case usagelog.FieldHedgedWinnerIndex:
+		return m.HedgedWinnerIndex()
+	case usagelog.FieldHedgedCanceledCount:
+		return m.HedgedCanceledCount()
+	case usagelog.FieldHedgedErrorCount:
+		return m.HedgedErrorCount()
+	case usagelog.FieldHedgedAttempts:
+		return m.HedgedAttempts()
 	case usagelog.FieldUserAgent:
 		return m.UserAgent()
 	case usagelog.FieldIPAddress:
@@ -37692,6 +38582,18 @@ func (m *UsageLogMutation) OldField(ctx context.Context, name string) (ent.Value
 		return m.OldDurationMs(ctx)
 	case usagelog.FieldFirstTokenMs:
 		return m.OldFirstTokenMs(ctx)
+	case usagelog.FieldHedgedEnabled:
+		return m.OldHedgedEnabled(ctx)
+	case usagelog.FieldHedgedAttemptCount:
+		return m.OldHedgedAttemptCount(ctx)
+	case usagelog.FieldHedgedWinnerIndex:
+		return m.OldHedgedWinnerIndex(ctx)
+	case usagelog.FieldHedgedCanceledCount:
+		return m.OldHedgedCanceledCount(ctx)
+	case usagelog.FieldHedgedErrorCount:
+		return m.OldHedgedErrorCount(ctx)
+	case usagelog.FieldHedgedAttempts:
+		return m.OldHedgedAttempts(ctx)
 	case usagelog.FieldUserAgent:
 		return m.OldUserAgent(ctx)
 	case usagelog.FieldIPAddress:
@@ -37938,6 +38840,48 @@ func (m *UsageLogMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetFirstTokenMs(v)
 		return nil
+	case usagelog.FieldHedgedEnabled:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedEnabled(v)
+		return nil
+	case usagelog.FieldHedgedAttemptCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedAttemptCount(v)
+		return nil
+	case usagelog.FieldHedgedWinnerIndex:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedWinnerIndex(v)
+		return nil
+	case usagelog.FieldHedgedCanceledCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedCanceledCount(v)
+		return nil
+	case usagelog.FieldHedgedErrorCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedErrorCount(v)
+		return nil
+	case usagelog.FieldHedgedAttempts:
+		v, ok := value.([]map[string]interface{})
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetHedgedAttempts(v)
+		return nil
 	case usagelog.FieldUserAgent:
 		v, ok := value.(string)
 		if !ok {
@@ -38070,6 +39014,18 @@ func (m *UsageLogMutation) AddedFields() []string {
 	if m.addfirst_token_ms != nil {
 		fields = append(fields, usagelog.FieldFirstTokenMs)
 	}
+	if m.addhedged_attempt_count != nil {
+		fields = append(fields, usagelog.FieldHedgedAttemptCount)
+	}
+	if m.addhedged_winner_index != nil {
+		fields = append(fields, usagelog.FieldHedgedWinnerIndex)
+	}
+	if m.addhedged_canceled_count != nil {
+		fields = append(fields, usagelog.FieldHedgedCanceledCount)
+	}
+	if m.addhedged_error_count != nil {
+		fields = append(fields, usagelog.FieldHedgedErrorCount)
+	}
 	if m.addimage_count != nil {
 		fields = append(fields, usagelog.FieldImageCount)
 	}
@@ -38117,6 +39073,14 @@ func (m *UsageLogMutation) AddedField(name string) (ent.Value, bool) {
 		return m.AddedDurationMs()
 	case usagelog.FieldFirstTokenMs:
 		return m.AddedFirstTokenMs()
+	case usagelog.FieldHedgedAttemptCount:
+		return m.AddedHedgedAttemptCount()
+	case usagelog.FieldHedgedWinnerIndex:
+		return m.AddedHedgedWinnerIndex()
+	case usagelog.FieldHedgedCanceledCount:
+		return m.AddedHedgedCanceledCount()
+	case usagelog.FieldHedgedErrorCount:
+		return m.AddedHedgedErrorCount()
 	case usagelog.FieldImageCount:
 		return m.AddedImageCount()
 	}
@@ -38254,6 +39218,34 @@ func (m *UsageLogMutation) AddField(name string, value ent.Value) error {
 		}
 		m.AddFirstTokenMs(v)
 		return nil
+	case usagelog.FieldHedgedAttemptCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgedAttemptCount(v)
+		return nil
+	case usagelog.FieldHedgedWinnerIndex:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgedWinnerIndex(v)
+		return nil
+	case usagelog.FieldHedgedCanceledCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgedCanceledCount(v)
+		return nil
+	case usagelog.FieldHedgedErrorCount:
+		v, ok := value.(int)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.AddHedgedErrorCount(v)
+		return nil
 	case usagelog.FieldImageCount:
 		v, ok := value.(int)
 		if !ok {
@@ -38301,6 +39293,12 @@ func (m *UsageLogMutation) ClearedFields() []string {
 	}
 	if m.FieldCleared(usagelog.FieldFirstTokenMs) {
 		fields = append(fields, usagelog.FieldFirstTokenMs)
+	}
+	if m.FieldCleared(usagelog.FieldHedgedWinnerIndex) {
+		fields = append(fields, usagelog.FieldHedgedWinnerIndex)
+	}
+	if m.FieldCleared(usagelog.FieldHedgedAttempts) {
+		fields = append(fields, usagelog.FieldHedgedAttempts)
 	}
 	if m.FieldCleared(usagelog.FieldUserAgent) {
 		fields = append(fields, usagelog.FieldUserAgent)
@@ -38369,6 +39367,12 @@ func (m *UsageLogMutation) ClearField(name string) error {
 		return nil
 	case usagelog.FieldFirstTokenMs:
 		m.ClearFirstTokenMs()
+		return nil
+	case usagelog.FieldHedgedWinnerIndex:
+		m.ClearHedgedWinnerIndex()
+		return nil
+	case usagelog.FieldHedgedAttempts:
+		m.ClearHedgedAttempts()
 		return nil
 	case usagelog.FieldUserAgent:
 		m.ClearUserAgent()
@@ -38491,6 +39495,24 @@ func (m *UsageLogMutation) ResetField(name string) error {
 		return nil
 	case usagelog.FieldFirstTokenMs:
 		m.ResetFirstTokenMs()
+		return nil
+	case usagelog.FieldHedgedEnabled:
+		m.ResetHedgedEnabled()
+		return nil
+	case usagelog.FieldHedgedAttemptCount:
+		m.ResetHedgedAttemptCount()
+		return nil
+	case usagelog.FieldHedgedWinnerIndex:
+		m.ResetHedgedWinnerIndex()
+		return nil
+	case usagelog.FieldHedgedCanceledCount:
+		m.ResetHedgedCanceledCount()
+		return nil
+	case usagelog.FieldHedgedErrorCount:
+		m.ResetHedgedErrorCount()
+		return nil
+	case usagelog.FieldHedgedAttempts:
+		m.ResetHedgedAttempts()
 		return nil
 	case usagelog.FieldUserAgent:
 		m.ResetUserAgent()

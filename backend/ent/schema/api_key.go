@@ -59,24 +59,20 @@ func (APIKey) Fields() []ent.Field {
 			Comment("Blocked IPs/CIDRs"),
 
 		// ========== Quota fields ==========
-		// Quota limit in USD (0 = unlimited)
 		field.Float("quota").
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
 			Comment("Quota limit in USD for this API key (0 = unlimited)"),
-		// Used quota amount
 		field.Float("quota_used").
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
 			Comment("Used quota amount in USD"),
-		// Expiration time (nil = never expires)
 		field.Time("expires_at").
 			Optional().
 			Nillable().
 			Comment("Expiration time for this API key (null = never expires)"),
 
 		// ========== Rate limit fields ==========
-		// Rate limit configuration (0 = unlimited)
 		field.Float("rate_limit_5h").
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
@@ -89,7 +85,6 @@ func (APIKey) Fields() []ent.Field {
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
 			Comment("Rate limit in USD per 7 days (0 = unlimited)"),
-		// Rate limit usage tracking
 		field.Float("usage_5h").
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
@@ -102,7 +97,6 @@ func (APIKey) Fields() []ent.Field {
 			SchemaType(map[string]string{dialect.Postgres: "decimal(20,8)"}).
 			Default(0).
 			Comment("Used amount in USD for the current 7d window"),
-		// Window start times
 		field.Time("window_5h_start").
 			Optional().
 			Nillable().
@@ -115,6 +109,30 @@ func (APIKey) Fields() []ent.Field {
 			Optional().
 			Nillable().
 			Comment("Start time of the current 7d rate limit window"),
+
+		// ========== First-byte hedge policy fields ==========
+		field.Bool("acceleration_enabled").
+			Default(false).
+			Comment("Enable API key level acceleration policy"),
+		field.Bool("hedge_enabled").
+			Default(false).
+			Comment("Enable first-byte hedged racing for this API key"),
+		field.Int("hedge_initial_parallel_count").
+			Default(1).
+			Comment("Initial concurrent upstream request count"),
+		field.Float("hedge_delay_seconds").
+			Default(10).
+			Comment("Seconds to wait before launching delayed hedge requests"),
+		field.Int("hedge_delayed_parallel_count").
+			Default(1).
+			Comment("Additional upstream request count launched after delay"),
+		field.Int("hedge_max_parallel_count").
+			Default(2).
+			Comment("Maximum concurrent upstream request count for one client request"),
+		field.String("hedge_route_strategy").
+			MaxLen(32).
+			Default("same_account").
+			Comment("Hedged route strategy"),
 	}
 }
 
@@ -135,13 +153,11 @@ func (APIKey) Edges() []ent.Edge {
 
 func (APIKey) Indexes() []ent.Index {
 	return []ent.Index{
-		// key 字段已在 Fields() 中声明 Unique()，无需重复索引
 		index.Fields("user_id"),
 		index.Fields("group_id"),
 		index.Fields("status"),
 		index.Fields("deleted_at"),
 		index.Fields("last_used_at"),
-		// Index for quota queries
 		index.Fields("quota", "quota_used"),
 		index.Fields("expires_at"),
 	}

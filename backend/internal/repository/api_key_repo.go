@@ -51,7 +51,14 @@ func (r *apiKeyRepository) Create(ctx context.Context, key *service.APIKey) erro
 		SetNillableExpiresAt(key.ExpiresAt).
 		SetRateLimit5h(key.RateLimit5h).
 		SetRateLimit1d(key.RateLimit1d).
-		SetRateLimit7d(key.RateLimit7d)
+		SetRateLimit7d(key.RateLimit7d).
+		SetAccelerationEnabled(key.AccelerationEnabled).
+		SetHedgeEnabled(key.HedgeEnabled).
+		SetHedgeInitialParallelCount(key.HedgeInitialParallelCount).
+		SetHedgeDelaySeconds(key.HedgeDelaySeconds).
+		SetHedgeDelayedParallelCount(key.HedgeDelayedParallelCount).
+		SetHedgeMaxParallelCount(key.HedgeMaxParallelCount).
+		SetHedgeRouteStrategy(key.HedgeRouteStrategy)
 
 	if len(key.IPWhitelist) > 0 {
 		builder.SetIPWhitelist(key.IPWhitelist)
@@ -140,6 +147,13 @@ func (r *apiKeyRepository) GetByKeyForAuth(ctx context.Context, key string) (*se
 			apikey.FieldRateLimit5h,
 			apikey.FieldRateLimit1d,
 			apikey.FieldRateLimit7d,
+			apikey.FieldAccelerationEnabled,
+			apikey.FieldHedgeEnabled,
+			apikey.FieldHedgeInitialParallelCount,
+			apikey.FieldHedgeDelaySeconds,
+			apikey.FieldHedgeDelayedParallelCount,
+			apikey.FieldHedgeMaxParallelCount,
+			apikey.FieldHedgeRouteStrategy,
 		).
 		WithUser(func(q *dbent.UserQuery) {
 			q.Select(
@@ -223,6 +237,13 @@ func (r *apiKeyRepository) Update(ctx context.Context, key *service.APIKey) erro
 		SetRateLimit5h(key.RateLimit5h).
 		SetRateLimit1d(key.RateLimit1d).
 		SetRateLimit7d(key.RateLimit7d).
+		SetAccelerationEnabled(key.AccelerationEnabled).
+		SetHedgeEnabled(key.HedgeEnabled).
+		SetHedgeInitialParallelCount(key.HedgeInitialParallelCount).
+		SetHedgeDelaySeconds(key.HedgeDelaySeconds).
+		SetHedgeDelayedParallelCount(key.HedgeDelayedParallelCount).
+		SetHedgeMaxParallelCount(key.HedgeMaxParallelCount).
+		SetHedgeRouteStrategy(key.HedgeRouteStrategy).
 		SetUsage5h(key.Usage5h).
 		SetUsage1d(key.Usage1d).
 		SetUsage7d(key.Usage7d).
@@ -721,6 +742,13 @@ func apiKeyEntityToService(m *dbent.APIKey) *service.APIKey {
 		Window5hStart: m.Window5hStart,
 		Window1dStart: m.Window1dStart,
 		Window7dStart: m.Window7dStart,
+		AccelerationEnabled:       m.AccelerationEnabled,
+		HedgeEnabled:              m.HedgeEnabled,
+		HedgeInitialParallelCount: m.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         m.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: m.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     m.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        m.HedgeRouteStrategy,
 	}
 	if m.Edges.User != nil {
 		out.User = userEntityToService(m.Edges.User)

@@ -42,6 +42,14 @@ type CreateAPIKeyRequest struct {
 	RateLimit5h *float64 `json:"rate_limit_5h"`
 	RateLimit1d *float64 `json:"rate_limit_1d"`
 	RateLimit7d *float64 `json:"rate_limit_7d"`
+
+	AccelerationEnabled       *bool    `json:"acceleration_enabled"`
+	HedgeEnabled              *bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount *int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         *float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount *int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     *int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        *string  `json:"hedge_route_strategy"`
 }
 
 // UpdateAPIKeyRequest represents the update API key request payload
@@ -60,6 +68,14 @@ type UpdateAPIKeyRequest struct {
 	RateLimit1d         *float64 `json:"rate_limit_1d"`
 	RateLimit7d         *float64 `json:"rate_limit_7d"`
 	ResetRateLimitUsage *bool    `json:"reset_rate_limit_usage"` // 重置限速用量
+
+	AccelerationEnabled       *bool    `json:"acceleration_enabled"`
+	HedgeEnabled              *bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount *int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         *float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount *int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     *int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        *string  `json:"hedge_route_strategy"`
 }
 
 // List handles listing user's API keys with pagination
@@ -174,6 +190,28 @@ func (h *APIKeyHandler) Create(c *gin.Context) {
 		svcReq.RateLimit7d = *req.RateLimit7d
 	}
 
+	if req.AccelerationEnabled != nil {
+		svcReq.AccelerationEnabled = *req.AccelerationEnabled
+	}
+	if req.HedgeEnabled != nil {
+		svcReq.HedgeEnabled = *req.HedgeEnabled
+	}
+	if req.HedgeInitialParallelCount != nil {
+		svcReq.HedgeInitialParallelCount = *req.HedgeInitialParallelCount
+	}
+	if req.HedgeDelaySeconds != nil {
+		svcReq.HedgeDelaySeconds = *req.HedgeDelaySeconds
+	}
+	if req.HedgeDelayedParallelCount != nil {
+		svcReq.HedgeDelayedParallelCount = *req.HedgeDelayedParallelCount
+	}
+	if req.HedgeMaxParallelCount != nil {
+		svcReq.HedgeMaxParallelCount = *req.HedgeMaxParallelCount
+	}
+	if req.HedgeRouteStrategy != nil {
+		svcReq.HedgeRouteStrategy = *req.HedgeRouteStrategy
+	}
+
 	executeUserIdempotentJSON(c, "user.api_keys.create", req, service.DefaultWriteIdempotencyTTL(), func(ctx context.Context) (any, error) {
 		key, err := h.apiKeyService.Create(ctx, subject.UserID, svcReq)
 		if err != nil {
@@ -205,14 +243,21 @@ func (h *APIKeyHandler) Update(c *gin.Context) {
 	}
 
 	svcReq := service.UpdateAPIKeyRequest{
-		IPWhitelist:         req.IPWhitelist,
-		IPBlacklist:         req.IPBlacklist,
-		Quota:               req.Quota,
-		ResetQuota:          req.ResetQuota,
-		RateLimit5h:         req.RateLimit5h,
-		RateLimit1d:         req.RateLimit1d,
-		RateLimit7d:         req.RateLimit7d,
-		ResetRateLimitUsage: req.ResetRateLimitUsage,
+		IPWhitelist:               req.IPWhitelist,
+		IPBlacklist:               req.IPBlacklist,
+		Quota:                     req.Quota,
+		ResetQuota:                req.ResetQuota,
+		RateLimit5h:               req.RateLimit5h,
+		RateLimit1d:               req.RateLimit1d,
+		RateLimit7d:               req.RateLimit7d,
+		ResetRateLimitUsage:       req.ResetRateLimitUsage,
+		AccelerationEnabled:       req.AccelerationEnabled,
+		HedgeEnabled:              req.HedgeEnabled,
+		HedgeInitialParallelCount: req.HedgeInitialParallelCount,
+		HedgeDelaySeconds:         req.HedgeDelaySeconds,
+		HedgeDelayedParallelCount: req.HedgeDelayedParallelCount,
+		HedgeMaxParallelCount:     req.HedgeMaxParallelCount,
+		HedgeRouteStrategy:        req.HedgeRouteStrategy,
 	}
 	if req.Name != "" {
 		svcReq.Name = &req.Name

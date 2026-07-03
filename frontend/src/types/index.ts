@@ -590,6 +590,13 @@ export interface ApiKey {
   reset_5h_at: string | null
   reset_1d_at: string | null
   reset_7d_at: string | null
+  acceleration_enabled: boolean
+  hedge_enabled: boolean
+  hedge_initial_parallel_count: number
+  hedge_delay_seconds: number
+  hedge_delayed_parallel_count: number
+  hedge_max_parallel_count: number
+  hedge_route_strategy: string
 }
 
 export interface CreateApiKeyRequest {
@@ -603,6 +610,13 @@ export interface CreateApiKeyRequest {
   rate_limit_5h?: number
   rate_limit_1d?: number
   rate_limit_7d?: number
+  acceleration_enabled?: boolean
+  hedge_enabled?: boolean
+  hedge_initial_parallel_count?: number
+  hedge_delay_seconds?: number
+  hedge_delayed_parallel_count?: number
+  hedge_max_parallel_count?: number
+  hedge_route_strategy?: string
 }
 
 export interface UpdateApiKeyRequest {
@@ -618,6 +632,13 @@ export interface UpdateApiKeyRequest {
   rate_limit_1d?: number
   rate_limit_7d?: number
   reset_rate_limit_usage?: boolean
+  acceleration_enabled?: boolean
+  hedge_enabled?: boolean
+  hedge_initial_parallel_count?: number
+  hedge_delay_seconds?: number
+  hedge_delayed_parallel_count?: number
+  hedge_max_parallel_count?: number
+  hedge_route_strategy?: string
 }
 
 export interface CreateGroupRequest {
@@ -1241,6 +1262,14 @@ export type UsageRequestType = 'unknown' | 'sync' | 'stream' | 'ws_v2' | 'cyber'
 export type ImageSizeSource = 'output' | 'input' | 'default' | 'legacy'
 export type ImageSizeBreakdown = Record<string, number>
 
+export interface UsageLogHedgedAttempt {
+  index: number
+  status: string
+  duration_ms?: number
+  first_token_ms?: number
+  error?: string
+}
+
 export interface UsageLog {
   id: number
   user_id: number
@@ -1277,6 +1306,14 @@ export interface UsageLog {
   openai_ws_mode?: boolean
   duration_ms: number | null
   first_token_ms: number | null
+
+  // 多发保护 / 首字竞速
+  hedged_enabled: boolean
+  hedged_attempt_count: number
+  hedged_winner_index?: number | null
+  hedged_canceled_count: number
+  hedged_error_count: number
+  hedged_attempts?: UsageLogHedgedAttempt[] | null
 
   // 图片生成字段
   image_count: number

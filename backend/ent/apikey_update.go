@@ -438,6 +438,132 @@ func (_u *APIKeyUpdate) ClearWindow7dStart() *APIKeyUpdate {
 	return _u
 }
 
+// SetAccelerationEnabled sets the "acceleration_enabled" field.
+func (_u *APIKeyUpdate) SetAccelerationEnabled(v bool) *APIKeyUpdate {
+	_u.mutation.SetAccelerationEnabled(v)
+	return _u
+}
+
+// SetNillableAccelerationEnabled sets the "acceleration_enabled" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableAccelerationEnabled(v *bool) *APIKeyUpdate {
+	if v != nil {
+		_u.SetAccelerationEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgeEnabled sets the "hedge_enabled" field.
+func (_u *APIKeyUpdate) SetHedgeEnabled(v bool) *APIKeyUpdate {
+	_u.mutation.SetHedgeEnabled(v)
+	return _u
+}
+
+// SetNillableHedgeEnabled sets the "hedge_enabled" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeEnabled(v *bool) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgeInitialParallelCount sets the "hedge_initial_parallel_count" field.
+func (_u *APIKeyUpdate) SetHedgeInitialParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.ResetHedgeInitialParallelCount()
+	_u.mutation.SetHedgeInitialParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeInitialParallelCount sets the "hedge_initial_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeInitialParallelCount(v *int) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeInitialParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeInitialParallelCount adds value to the "hedge_initial_parallel_count" field.
+func (_u *APIKeyUpdate) AddHedgeInitialParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.AddHedgeInitialParallelCount(v)
+	return _u
+}
+
+// SetHedgeDelaySeconds sets the "hedge_delay_seconds" field.
+func (_u *APIKeyUpdate) SetHedgeDelaySeconds(v float64) *APIKeyUpdate {
+	_u.mutation.ResetHedgeDelaySeconds()
+	_u.mutation.SetHedgeDelaySeconds(v)
+	return _u
+}
+
+// SetNillableHedgeDelaySeconds sets the "hedge_delay_seconds" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeDelaySeconds(v *float64) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeDelaySeconds(*v)
+	}
+	return _u
+}
+
+// AddHedgeDelaySeconds adds value to the "hedge_delay_seconds" field.
+func (_u *APIKeyUpdate) AddHedgeDelaySeconds(v float64) *APIKeyUpdate {
+	_u.mutation.AddHedgeDelaySeconds(v)
+	return _u
+}
+
+// SetHedgeDelayedParallelCount sets the "hedge_delayed_parallel_count" field.
+func (_u *APIKeyUpdate) SetHedgeDelayedParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.ResetHedgeDelayedParallelCount()
+	_u.mutation.SetHedgeDelayedParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeDelayedParallelCount sets the "hedge_delayed_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeDelayedParallelCount(v *int) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeDelayedParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeDelayedParallelCount adds value to the "hedge_delayed_parallel_count" field.
+func (_u *APIKeyUpdate) AddHedgeDelayedParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.AddHedgeDelayedParallelCount(v)
+	return _u
+}
+
+// SetHedgeMaxParallelCount sets the "hedge_max_parallel_count" field.
+func (_u *APIKeyUpdate) SetHedgeMaxParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.ResetHedgeMaxParallelCount()
+	_u.mutation.SetHedgeMaxParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeMaxParallelCount sets the "hedge_max_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeMaxParallelCount(v *int) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeMaxParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeMaxParallelCount adds value to the "hedge_max_parallel_count" field.
+func (_u *APIKeyUpdate) AddHedgeMaxParallelCount(v int) *APIKeyUpdate {
+	_u.mutation.AddHedgeMaxParallelCount(v)
+	return _u
+}
+
+// SetHedgeRouteStrategy sets the "hedge_route_strategy" field.
+func (_u *APIKeyUpdate) SetHedgeRouteStrategy(v string) *APIKeyUpdate {
+	_u.mutation.SetHedgeRouteStrategy(v)
+	return _u
+}
+
+// SetNillableHedgeRouteStrategy sets the "hedge_route_strategy" field if the given value is not nil.
+func (_u *APIKeyUpdate) SetNillableHedgeRouteStrategy(v *string) *APIKeyUpdate {
+	if v != nil {
+		_u.SetHedgeRouteStrategy(*v)
+	}
+	return _u
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (_u *APIKeyUpdate) SetUser(v *User) *APIKeyUpdate {
 	return _u.SetUserID(v.ID)
@@ -558,6 +684,11 @@ func (_u *APIKeyUpdate) check() error {
 	if v, ok := _u.mutation.Status(); ok {
 		if err := apikey.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "APIKey.status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.HedgeRouteStrategy(); ok {
+		if err := apikey.HedgeRouteStrategyValidator(v); err != nil {
+			return &ValidationError{Name: "hedge_route_strategy", err: fmt.Errorf(`ent: validator failed for field "APIKey.hedge_route_strategy": %w`, err)}
 		}
 	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
@@ -695,6 +826,39 @@ func (_u *APIKeyUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.Window7dStartCleared() {
 		_spec.ClearField(apikey.FieldWindow7dStart, field.TypeTime)
+	}
+	if value, ok := _u.mutation.AccelerationEnabled(); ok {
+		_spec.SetField(apikey.FieldAccelerationEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgeEnabled(); ok {
+		_spec.SetField(apikey.FieldHedgeEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgeInitialParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeInitialParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeInitialParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeInitialParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeDelaySeconds(); ok {
+		_spec.SetField(apikey.FieldHedgeDelaySeconds, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeDelaySeconds(); ok {
+		_spec.AddField(apikey.FieldHedgeDelaySeconds, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.HedgeDelayedParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeDelayedParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeDelayedParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeDelayedParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeMaxParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeMaxParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeMaxParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeMaxParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeRouteStrategy(); ok {
+		_spec.SetField(apikey.FieldHedgeRouteStrategy, field.TypeString, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -1225,6 +1389,132 @@ func (_u *APIKeyUpdateOne) ClearWindow7dStart() *APIKeyUpdateOne {
 	return _u
 }
 
+// SetAccelerationEnabled sets the "acceleration_enabled" field.
+func (_u *APIKeyUpdateOne) SetAccelerationEnabled(v bool) *APIKeyUpdateOne {
+	_u.mutation.SetAccelerationEnabled(v)
+	return _u
+}
+
+// SetNillableAccelerationEnabled sets the "acceleration_enabled" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableAccelerationEnabled(v *bool) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetAccelerationEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgeEnabled sets the "hedge_enabled" field.
+func (_u *APIKeyUpdateOne) SetHedgeEnabled(v bool) *APIKeyUpdateOne {
+	_u.mutation.SetHedgeEnabled(v)
+	return _u
+}
+
+// SetNillableHedgeEnabled sets the "hedge_enabled" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeEnabled(v *bool) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgeInitialParallelCount sets the "hedge_initial_parallel_count" field.
+func (_u *APIKeyUpdateOne) SetHedgeInitialParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.ResetHedgeInitialParallelCount()
+	_u.mutation.SetHedgeInitialParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeInitialParallelCount sets the "hedge_initial_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeInitialParallelCount(v *int) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeInitialParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeInitialParallelCount adds value to the "hedge_initial_parallel_count" field.
+func (_u *APIKeyUpdateOne) AddHedgeInitialParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.AddHedgeInitialParallelCount(v)
+	return _u
+}
+
+// SetHedgeDelaySeconds sets the "hedge_delay_seconds" field.
+func (_u *APIKeyUpdateOne) SetHedgeDelaySeconds(v float64) *APIKeyUpdateOne {
+	_u.mutation.ResetHedgeDelaySeconds()
+	_u.mutation.SetHedgeDelaySeconds(v)
+	return _u
+}
+
+// SetNillableHedgeDelaySeconds sets the "hedge_delay_seconds" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeDelaySeconds(v *float64) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeDelaySeconds(*v)
+	}
+	return _u
+}
+
+// AddHedgeDelaySeconds adds value to the "hedge_delay_seconds" field.
+func (_u *APIKeyUpdateOne) AddHedgeDelaySeconds(v float64) *APIKeyUpdateOne {
+	_u.mutation.AddHedgeDelaySeconds(v)
+	return _u
+}
+
+// SetHedgeDelayedParallelCount sets the "hedge_delayed_parallel_count" field.
+func (_u *APIKeyUpdateOne) SetHedgeDelayedParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.ResetHedgeDelayedParallelCount()
+	_u.mutation.SetHedgeDelayedParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeDelayedParallelCount sets the "hedge_delayed_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeDelayedParallelCount(v *int) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeDelayedParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeDelayedParallelCount adds value to the "hedge_delayed_parallel_count" field.
+func (_u *APIKeyUpdateOne) AddHedgeDelayedParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.AddHedgeDelayedParallelCount(v)
+	return _u
+}
+
+// SetHedgeMaxParallelCount sets the "hedge_max_parallel_count" field.
+func (_u *APIKeyUpdateOne) SetHedgeMaxParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.ResetHedgeMaxParallelCount()
+	_u.mutation.SetHedgeMaxParallelCount(v)
+	return _u
+}
+
+// SetNillableHedgeMaxParallelCount sets the "hedge_max_parallel_count" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeMaxParallelCount(v *int) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeMaxParallelCount(*v)
+	}
+	return _u
+}
+
+// AddHedgeMaxParallelCount adds value to the "hedge_max_parallel_count" field.
+func (_u *APIKeyUpdateOne) AddHedgeMaxParallelCount(v int) *APIKeyUpdateOne {
+	_u.mutation.AddHedgeMaxParallelCount(v)
+	return _u
+}
+
+// SetHedgeRouteStrategy sets the "hedge_route_strategy" field.
+func (_u *APIKeyUpdateOne) SetHedgeRouteStrategy(v string) *APIKeyUpdateOne {
+	_u.mutation.SetHedgeRouteStrategy(v)
+	return _u
+}
+
+// SetNillableHedgeRouteStrategy sets the "hedge_route_strategy" field if the given value is not nil.
+func (_u *APIKeyUpdateOne) SetNillableHedgeRouteStrategy(v *string) *APIKeyUpdateOne {
+	if v != nil {
+		_u.SetHedgeRouteStrategy(*v)
+	}
+	return _u
+}
+
 // SetUser sets the "user" edge to the User entity.
 func (_u *APIKeyUpdateOne) SetUser(v *User) *APIKeyUpdateOne {
 	return _u.SetUserID(v.ID)
@@ -1358,6 +1648,11 @@ func (_u *APIKeyUpdateOne) check() error {
 	if v, ok := _u.mutation.Status(); ok {
 		if err := apikey.StatusValidator(v); err != nil {
 			return &ValidationError{Name: "status", err: fmt.Errorf(`ent: validator failed for field "APIKey.status": %w`, err)}
+		}
+	}
+	if v, ok := _u.mutation.HedgeRouteStrategy(); ok {
+		if err := apikey.HedgeRouteStrategyValidator(v); err != nil {
+			return &ValidationError{Name: "hedge_route_strategy", err: fmt.Errorf(`ent: validator failed for field "APIKey.hedge_route_strategy": %w`, err)}
 		}
 	}
 	if _u.mutation.UserCleared() && len(_u.mutation.UserIDs()) > 0 {
@@ -1512,6 +1807,39 @@ func (_u *APIKeyUpdateOne) sqlSave(ctx context.Context) (_node *APIKey, err erro
 	}
 	if _u.mutation.Window7dStartCleared() {
 		_spec.ClearField(apikey.FieldWindow7dStart, field.TypeTime)
+	}
+	if value, ok := _u.mutation.AccelerationEnabled(); ok {
+		_spec.SetField(apikey.FieldAccelerationEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgeEnabled(); ok {
+		_spec.SetField(apikey.FieldHedgeEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgeInitialParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeInitialParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeInitialParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeInitialParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeDelaySeconds(); ok {
+		_spec.SetField(apikey.FieldHedgeDelaySeconds, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeDelaySeconds(); ok {
+		_spec.AddField(apikey.FieldHedgeDelaySeconds, field.TypeFloat64, value)
+	}
+	if value, ok := _u.mutation.HedgeDelayedParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeDelayedParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeDelayedParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeDelayedParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeMaxParallelCount(); ok {
+		_spec.SetField(apikey.FieldHedgeMaxParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgeMaxParallelCount(); ok {
+		_spec.AddField(apikey.FieldHedgeMaxParallelCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgeRouteStrategy(); ok {
+		_spec.SetField(apikey.FieldHedgeRouteStrategy, field.TypeString, value)
 	}
 	if _u.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

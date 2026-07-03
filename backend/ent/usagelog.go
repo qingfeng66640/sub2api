@@ -85,6 +85,18 @@ type UsageLog struct {
 	DurationMs *int `json:"duration_ms,omitempty"`
 	// FirstTokenMs holds the value of the "first_token_ms" field.
 	FirstTokenMs *int `json:"first_token_ms,omitempty"`
+	// HedgedEnabled holds the value of the "hedged_enabled" field.
+	HedgedEnabled bool `json:"hedged_enabled,omitempty"`
+	// HedgedAttemptCount holds the value of the "hedged_attempt_count" field.
+	HedgedAttemptCount int `json:"hedged_attempt_count,omitempty"`
+	// HedgedWinnerIndex holds the value of the "hedged_winner_index" field.
+	HedgedWinnerIndex *int `json:"hedged_winner_index,omitempty"`
+	// HedgedCanceledCount holds the value of the "hedged_canceled_count" field.
+	HedgedCanceledCount int `json:"hedged_canceled_count,omitempty"`
+	// HedgedErrorCount holds the value of the "hedged_error_count" field.
+	HedgedErrorCount int `json:"hedged_error_count,omitempty"`
+	// HedgedAttempts holds the value of the "hedged_attempts" field.
+	HedgedAttempts []map[string]interface{} `json:"hedged_attempts,omitempty"`
 	// UserAgent holds the value of the "user_agent" field.
 	UserAgent *string `json:"user_agent,omitempty"`
 	// IPAddress holds the value of the "ip_address" field.
@@ -188,13 +200,13 @@ func (*UsageLog) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case usagelog.FieldImageSizeBreakdown:
+		case usagelog.FieldHedgedAttempts, usagelog.FieldImageSizeBreakdown:
 			values[i] = new([]byte)
-		case usagelog.FieldStream, usagelog.FieldCacheTTLOverridden:
+		case usagelog.FieldStream, usagelog.FieldHedgedEnabled, usagelog.FieldCacheTTLOverridden:
 			values[i] = new(sql.NullBool)
 		case usagelog.FieldInputCost, usagelog.FieldOutputCost, usagelog.FieldCacheCreationCost, usagelog.FieldCacheReadCost, usagelog.FieldTotalCost, usagelog.FieldActualCost, usagelog.FieldRateMultiplier, usagelog.FieldAccountRateMultiplier:
 			values[i] = new(sql.NullFloat64)
-		case usagelog.FieldID, usagelog.FieldUserID, usagelog.FieldAPIKeyID, usagelog.FieldAccountID, usagelog.FieldChannelID, usagelog.FieldGroupID, usagelog.FieldSubscriptionID, usagelog.FieldInputTokens, usagelog.FieldOutputTokens, usagelog.FieldCacheCreationTokens, usagelog.FieldCacheReadTokens, usagelog.FieldCacheCreation5mTokens, usagelog.FieldCacheCreation1hTokens, usagelog.FieldBillingType, usagelog.FieldDurationMs, usagelog.FieldFirstTokenMs, usagelog.FieldImageCount:
+		case usagelog.FieldID, usagelog.FieldUserID, usagelog.FieldAPIKeyID, usagelog.FieldAccountID, usagelog.FieldChannelID, usagelog.FieldGroupID, usagelog.FieldSubscriptionID, usagelog.FieldInputTokens, usagelog.FieldOutputTokens, usagelog.FieldCacheCreationTokens, usagelog.FieldCacheReadTokens, usagelog.FieldCacheCreation5mTokens, usagelog.FieldCacheCreation1hTokens, usagelog.FieldBillingType, usagelog.FieldDurationMs, usagelog.FieldFirstTokenMs, usagelog.FieldHedgedAttemptCount, usagelog.FieldHedgedWinnerIndex, usagelog.FieldHedgedCanceledCount, usagelog.FieldHedgedErrorCount, usagelog.FieldImageCount:
 			values[i] = new(sql.NullInt64)
 		case usagelog.FieldRequestID, usagelog.FieldModel, usagelog.FieldRequestedModel, usagelog.FieldUpstreamModel, usagelog.FieldModelMappingChain, usagelog.FieldBillingTier, usagelog.FieldBillingMode, usagelog.FieldUserAgent, usagelog.FieldIPAddress, usagelog.FieldImageSize, usagelog.FieldImageInputSize, usagelog.FieldImageOutputSize, usagelog.FieldImageSizeSource:
 			values[i] = new(sql.NullString)
@@ -417,6 +429,45 @@ func (_m *UsageLog) assignValues(columns []string, values []any) error {
 			} else if value.Valid {
 				_m.FirstTokenMs = new(int)
 				*_m.FirstTokenMs = int(value.Int64)
+			}
+		case usagelog.FieldHedgedEnabled:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_enabled", values[i])
+			} else if value.Valid {
+				_m.HedgedEnabled = value.Bool
+			}
+		case usagelog.FieldHedgedAttemptCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_attempt_count", values[i])
+			} else if value.Valid {
+				_m.HedgedAttemptCount = int(value.Int64)
+			}
+		case usagelog.FieldHedgedWinnerIndex:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_winner_index", values[i])
+			} else if value.Valid {
+				_m.HedgedWinnerIndex = new(int)
+				*_m.HedgedWinnerIndex = int(value.Int64)
+			}
+		case usagelog.FieldHedgedCanceledCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_canceled_count", values[i])
+			} else if value.Valid {
+				_m.HedgedCanceledCount = int(value.Int64)
+			}
+		case usagelog.FieldHedgedErrorCount:
+			if value, ok := values[i].(*sql.NullInt64); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_error_count", values[i])
+			} else if value.Valid {
+				_m.HedgedErrorCount = int(value.Int64)
+			}
+		case usagelog.FieldHedgedAttempts:
+			if value, ok := values[i].(*[]byte); !ok {
+				return fmt.Errorf("unexpected type %T for field hedged_attempts", values[i])
+			} else if value != nil && len(*value) > 0 {
+				if err := json.Unmarshal(*value, &_m.HedgedAttempts); err != nil {
+					return fmt.Errorf("unmarshal field hedged_attempts: %w", err)
+				}
 			}
 		case usagelog.FieldUserAgent:
 			if value, ok := values[i].(*sql.NullString); !ok {
@@ -661,6 +712,26 @@ func (_m *UsageLog) String() string {
 		builder.WriteString("first_token_ms=")
 		builder.WriteString(fmt.Sprintf("%v", *v))
 	}
+	builder.WriteString(", ")
+	builder.WriteString("hedged_enabled=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgedEnabled))
+	builder.WriteString(", ")
+	builder.WriteString("hedged_attempt_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgedAttemptCount))
+	builder.WriteString(", ")
+	if v := _m.HedgedWinnerIndex; v != nil {
+		builder.WriteString("hedged_winner_index=")
+		builder.WriteString(fmt.Sprintf("%v", *v))
+	}
+	builder.WriteString(", ")
+	builder.WriteString("hedged_canceled_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgedCanceledCount))
+	builder.WriteString(", ")
+	builder.WriteString("hedged_error_count=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgedErrorCount))
+	builder.WriteString(", ")
+	builder.WriteString("hedged_attempts=")
+	builder.WriteString(fmt.Sprintf("%v", _m.HedgedAttempts))
 	builder.WriteString(", ")
 	if v := _m.UserAgent; v != nil {
 		builder.WriteString("user_agent=")

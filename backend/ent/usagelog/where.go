@@ -210,6 +210,31 @@ func FirstTokenMs(v int) predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldEQ(FieldFirstTokenMs, v))
 }
 
+// HedgedEnabled applies equality check predicate on the "hedged_enabled" field. It's identical to HedgedEnabledEQ.
+func HedgedEnabled(v bool) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedEnabled, v))
+}
+
+// HedgedAttemptCount applies equality check predicate on the "hedged_attempt_count" field. It's identical to HedgedAttemptCountEQ.
+func HedgedAttemptCount(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedAttemptCount, v))
+}
+
+// HedgedWinnerIndex applies equality check predicate on the "hedged_winner_index" field. It's identical to HedgedWinnerIndexEQ.
+func HedgedWinnerIndex(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedCanceledCount applies equality check predicate on the "hedged_canceled_count" field. It's identical to HedgedCanceledCountEQ.
+func HedgedCanceledCount(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedCanceledCount, v))
+}
+
+// HedgedErrorCount applies equality check predicate on the "hedged_error_count" field. It's identical to HedgedErrorCountEQ.
+func HedgedErrorCount(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedErrorCount, v))
+}
+
 // UserAgent applies equality check predicate on the "user_agent" field. It's identical to UserAgentEQ.
 func UserAgent(v string) predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldEQ(FieldUserAgent, v))
@@ -1648,6 +1673,196 @@ func FirstTokenMsIsNil() predicate.UsageLog {
 // FirstTokenMsNotNil applies the NotNil predicate on the "first_token_ms" field.
 func FirstTokenMsNotNil() predicate.UsageLog {
 	return predicate.UsageLog(sql.FieldNotNull(FieldFirstTokenMs))
+}
+
+// HedgedEnabledEQ applies the EQ predicate on the "hedged_enabled" field.
+func HedgedEnabledEQ(v bool) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedEnabled, v))
+}
+
+// HedgedEnabledNEQ applies the NEQ predicate on the "hedged_enabled" field.
+func HedgedEnabledNEQ(v bool) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldHedgedEnabled, v))
+}
+
+// HedgedAttemptCountEQ applies the EQ predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedAttemptCount, v))
+}
+
+// HedgedAttemptCountNEQ applies the NEQ predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountNEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldHedgedAttemptCount, v))
+}
+
+// HedgedAttemptCountIn applies the In predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldHedgedAttemptCount, vs...))
+}
+
+// HedgedAttemptCountNotIn applies the NotIn predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountNotIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldHedgedAttemptCount, vs...))
+}
+
+// HedgedAttemptCountGT applies the GT predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountGT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldHedgedAttemptCount, v))
+}
+
+// HedgedAttemptCountGTE applies the GTE predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountGTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldHedgedAttemptCount, v))
+}
+
+// HedgedAttemptCountLT applies the LT predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountLT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldHedgedAttemptCount, v))
+}
+
+// HedgedAttemptCountLTE applies the LTE predicate on the "hedged_attempt_count" field.
+func HedgedAttemptCountLTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldHedgedAttemptCount, v))
+}
+
+// HedgedWinnerIndexEQ applies the EQ predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexNEQ applies the NEQ predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexNEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexIn applies the In predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldHedgedWinnerIndex, vs...))
+}
+
+// HedgedWinnerIndexNotIn applies the NotIn predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexNotIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldHedgedWinnerIndex, vs...))
+}
+
+// HedgedWinnerIndexGT applies the GT predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexGT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexGTE applies the GTE predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexGTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexLT applies the LT predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexLT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexLTE applies the LTE predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexLTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldHedgedWinnerIndex, v))
+}
+
+// HedgedWinnerIndexIsNil applies the IsNil predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexIsNil() predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIsNull(FieldHedgedWinnerIndex))
+}
+
+// HedgedWinnerIndexNotNil applies the NotNil predicate on the "hedged_winner_index" field.
+func HedgedWinnerIndexNotNil() predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotNull(FieldHedgedWinnerIndex))
+}
+
+// HedgedCanceledCountEQ applies the EQ predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedCanceledCount, v))
+}
+
+// HedgedCanceledCountNEQ applies the NEQ predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountNEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldHedgedCanceledCount, v))
+}
+
+// HedgedCanceledCountIn applies the In predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldHedgedCanceledCount, vs...))
+}
+
+// HedgedCanceledCountNotIn applies the NotIn predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountNotIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldHedgedCanceledCount, vs...))
+}
+
+// HedgedCanceledCountGT applies the GT predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountGT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldHedgedCanceledCount, v))
+}
+
+// HedgedCanceledCountGTE applies the GTE predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountGTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldHedgedCanceledCount, v))
+}
+
+// HedgedCanceledCountLT applies the LT predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountLT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldHedgedCanceledCount, v))
+}
+
+// HedgedCanceledCountLTE applies the LTE predicate on the "hedged_canceled_count" field.
+func HedgedCanceledCountLTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldHedgedCanceledCount, v))
+}
+
+// HedgedErrorCountEQ applies the EQ predicate on the "hedged_error_count" field.
+func HedgedErrorCountEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldEQ(FieldHedgedErrorCount, v))
+}
+
+// HedgedErrorCountNEQ applies the NEQ predicate on the "hedged_error_count" field.
+func HedgedErrorCountNEQ(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNEQ(FieldHedgedErrorCount, v))
+}
+
+// HedgedErrorCountIn applies the In predicate on the "hedged_error_count" field.
+func HedgedErrorCountIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIn(FieldHedgedErrorCount, vs...))
+}
+
+// HedgedErrorCountNotIn applies the NotIn predicate on the "hedged_error_count" field.
+func HedgedErrorCountNotIn(vs ...int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotIn(FieldHedgedErrorCount, vs...))
+}
+
+// HedgedErrorCountGT applies the GT predicate on the "hedged_error_count" field.
+func HedgedErrorCountGT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGT(FieldHedgedErrorCount, v))
+}
+
+// HedgedErrorCountGTE applies the GTE predicate on the "hedged_error_count" field.
+func HedgedErrorCountGTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldGTE(FieldHedgedErrorCount, v))
+}
+
+// HedgedErrorCountLT applies the LT predicate on the "hedged_error_count" field.
+func HedgedErrorCountLT(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLT(FieldHedgedErrorCount, v))
+}
+
+// HedgedErrorCountLTE applies the LTE predicate on the "hedged_error_count" field.
+func HedgedErrorCountLTE(v int) predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldLTE(FieldHedgedErrorCount, v))
+}
+
+// HedgedAttemptsIsNil applies the IsNil predicate on the "hedged_attempts" field.
+func HedgedAttemptsIsNil() predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldIsNull(FieldHedgedAttempts))
+}
+
+// HedgedAttemptsNotNil applies the NotNil predicate on the "hedged_attempts" field.
+func HedgedAttemptsNotNil() predicate.UsageLog {
+	return predicate.UsageLog(sql.FieldNotNull(FieldHedgedAttempts))
 }
 
 // UserAgentEQ applies the EQ predicate on the "user_agent" field.

@@ -60,6 +60,15 @@ type APIKey struct {
 	Window5hStart *time.Time // Start of current 5h window
 	Window1dStart *time.Time // Start of current 1d window
 	Window7dStart *time.Time // Start of current 7d window
+
+	// First-byte hedge policy fields
+	AccelerationEnabled       bool
+	HedgeEnabled              bool
+	HedgeInitialParallelCount int
+	HedgeDelaySeconds         float64
+	HedgeDelayedParallelCount int
+	HedgeMaxParallelCount     int
+	HedgeRouteStrategy        string
 }
 
 func (k *APIKey) IsActive() bool {

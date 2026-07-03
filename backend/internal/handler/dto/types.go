@@ -78,6 +78,14 @@ type APIKey struct {
 	Reset1dAt     *time.Time `json:"reset_1d_at,omitempty"`
 	Reset7dAt     *time.Time `json:"reset_7d_at,omitempty"`
 
+	AccelerationEnabled       bool    `json:"acceleration_enabled"`
+	HedgeEnabled              bool    `json:"hedge_enabled"`
+	HedgeInitialParallelCount int     `json:"hedge_initial_parallel_count"`
+	HedgeDelaySeconds         float64 `json:"hedge_delay_seconds"`
+	HedgeDelayedParallelCount int     `json:"hedge_delayed_parallel_count"`
+	HedgeMaxParallelCount     int     `json:"hedge_max_parallel_count"`
+	HedgeRouteStrategy        string  `json:"hedge_route_strategy"`
+
 	User  *User  `json:"user,omitempty"`
 	Group *Group `json:"group,omitempty"`
 }
@@ -466,6 +474,13 @@ type UsageLog struct {
 	OpenAIWSMode bool   `json:"openai_ws_mode"`
 	DurationMs   *int   `json:"duration_ms"`
 	FirstTokenMs *int   `json:"first_token_ms"`
+
+	HedgedEnabled       bool             `json:"hedged_enabled"`
+	HedgedAttemptCount  int              `json:"hedged_attempt_count"`
+	HedgedWinnerIndex   *int             `json:"hedged_winner_index,omitempty"`
+	HedgedCanceledCount int              `json:"hedged_canceled_count"`
+	HedgedErrorCount    int              `json:"hedged_error_count"`
+	HedgedAttempts      []map[string]any `json:"hedged_attempts,omitempty"`
 
 	// 图片生成字段
 	ImageCount         int            `json:"image_count"`

@@ -61,6 +61,20 @@ const (
 	FieldWindow1dStart = "window_1d_start"
 	// FieldWindow7dStart holds the string denoting the window_7d_start field in the database.
 	FieldWindow7dStart = "window_7d_start"
+	// FieldAccelerationEnabled holds the string denoting the acceleration_enabled field in the database.
+	FieldAccelerationEnabled = "acceleration_enabled"
+	// FieldHedgeEnabled holds the string denoting the hedge_enabled field in the database.
+	FieldHedgeEnabled = "hedge_enabled"
+	// FieldHedgeInitialParallelCount holds the string denoting the hedge_initial_parallel_count field in the database.
+	FieldHedgeInitialParallelCount = "hedge_initial_parallel_count"
+	// FieldHedgeDelaySeconds holds the string denoting the hedge_delay_seconds field in the database.
+	FieldHedgeDelaySeconds = "hedge_delay_seconds"
+	// FieldHedgeDelayedParallelCount holds the string denoting the hedge_delayed_parallel_count field in the database.
+	FieldHedgeDelayedParallelCount = "hedge_delayed_parallel_count"
+	// FieldHedgeMaxParallelCount holds the string denoting the hedge_max_parallel_count field in the database.
+	FieldHedgeMaxParallelCount = "hedge_max_parallel_count"
+	// FieldHedgeRouteStrategy holds the string denoting the hedge_route_strategy field in the database.
+	FieldHedgeRouteStrategy = "hedge_route_strategy"
 	// EdgeUser holds the string denoting the user edge name in mutations.
 	EdgeUser = "user"
 	// EdgeGroup holds the string denoting the group edge name in mutations.
@@ -118,6 +132,13 @@ var Columns = []string{
 	FieldWindow5hStart,
 	FieldWindow1dStart,
 	FieldWindow7dStart,
+	FieldAccelerationEnabled,
+	FieldHedgeEnabled,
+	FieldHedgeInitialParallelCount,
+	FieldHedgeDelaySeconds,
+	FieldHedgeDelayedParallelCount,
+	FieldHedgeMaxParallelCount,
+	FieldHedgeRouteStrategy,
 }
 
 // ValidColumn reports if the column name is valid (part of the table columns).
@@ -168,6 +189,22 @@ var (
 	DefaultUsage1d float64
 	// DefaultUsage7d holds the default value on creation for the "usage_7d" field.
 	DefaultUsage7d float64
+	// DefaultAccelerationEnabled holds the default value on creation for the "acceleration_enabled" field.
+	DefaultAccelerationEnabled bool
+	// DefaultHedgeEnabled holds the default value on creation for the "hedge_enabled" field.
+	DefaultHedgeEnabled bool
+	// DefaultHedgeInitialParallelCount holds the default value on creation for the "hedge_initial_parallel_count" field.
+	DefaultHedgeInitialParallelCount int
+	// DefaultHedgeDelaySeconds holds the default value on creation for the "hedge_delay_seconds" field.
+	DefaultHedgeDelaySeconds float64
+	// DefaultHedgeDelayedParallelCount holds the default value on creation for the "hedge_delayed_parallel_count" field.
+	DefaultHedgeDelayedParallelCount int
+	// DefaultHedgeMaxParallelCount holds the default value on creation for the "hedge_max_parallel_count" field.
+	DefaultHedgeMaxParallelCount int
+	// DefaultHedgeRouteStrategy holds the default value on creation for the "hedge_route_strategy" field.
+	DefaultHedgeRouteStrategy string
+	// HedgeRouteStrategyValidator is a validator for the "hedge_route_strategy" field. It is called by the builders before save.
+	HedgeRouteStrategyValidator func(string) error
 )
 
 // OrderOption defines the ordering options for the APIKey queries.
@@ -281,6 +318,41 @@ func ByWindow1dStart(opts ...sql.OrderTermOption) OrderOption {
 // ByWindow7dStart orders the results by the window_7d_start field.
 func ByWindow7dStart(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldWindow7dStart, opts...).ToFunc()
+}
+
+// ByAccelerationEnabled orders the results by the acceleration_enabled field.
+func ByAccelerationEnabled(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldAccelerationEnabled, opts...).ToFunc()
+}
+
+// ByHedgeEnabled orders the results by the hedge_enabled field.
+func ByHedgeEnabled(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeEnabled, opts...).ToFunc()
+}
+
+// ByHedgeInitialParallelCount orders the results by the hedge_initial_parallel_count field.
+func ByHedgeInitialParallelCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeInitialParallelCount, opts...).ToFunc()
+}
+
+// ByHedgeDelaySeconds orders the results by the hedge_delay_seconds field.
+func ByHedgeDelaySeconds(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeDelaySeconds, opts...).ToFunc()
+}
+
+// ByHedgeDelayedParallelCount orders the results by the hedge_delayed_parallel_count field.
+func ByHedgeDelayedParallelCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeDelayedParallelCount, opts...).ToFunc()
+}
+
+// ByHedgeMaxParallelCount orders the results by the hedge_max_parallel_count field.
+func ByHedgeMaxParallelCount(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeMaxParallelCount, opts...).ToFunc()
+}
+
+// ByHedgeRouteStrategy orders the results by the hedge_route_strategy field.
+func ByHedgeRouteStrategy(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldHedgeRouteStrategy, opts...).ToFunc()
 }
 
 // ByUserField orders the results by user field.

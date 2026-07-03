@@ -9,6 +9,7 @@ import (
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
+	"entgo.io/ent/dialect/sql/sqljson"
 	"entgo.io/ent/schema/field"
 	"github.com/Wei-Shaw/sub2api/ent/account"
 	"github.com/Wei-Shaw/sub2api/ent/apikey"
@@ -658,6 +659,128 @@ func (_u *UsageLogUpdate) ClearFirstTokenMs() *UsageLogUpdate {
 	return _u
 }
 
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (_u *UsageLogUpdate) SetHedgedEnabled(v bool) *UsageLogUpdate {
+	_u.mutation.SetHedgedEnabled(v)
+	return _u
+}
+
+// SetNillableHedgedEnabled sets the "hedged_enabled" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableHedgedEnabled(v *bool) *UsageLogUpdate {
+	if v != nil {
+		_u.SetHedgedEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (_u *UsageLogUpdate) SetHedgedAttemptCount(v int) *UsageLogUpdate {
+	_u.mutation.ResetHedgedAttemptCount()
+	_u.mutation.SetHedgedAttemptCount(v)
+	return _u
+}
+
+// SetNillableHedgedAttemptCount sets the "hedged_attempt_count" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableHedgedAttemptCount(v *int) *UsageLogUpdate {
+	if v != nil {
+		_u.SetHedgedAttemptCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedAttemptCount adds value to the "hedged_attempt_count" field.
+func (_u *UsageLogUpdate) AddHedgedAttemptCount(v int) *UsageLogUpdate {
+	_u.mutation.AddHedgedAttemptCount(v)
+	return _u
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (_u *UsageLogUpdate) SetHedgedWinnerIndex(v int) *UsageLogUpdate {
+	_u.mutation.ResetHedgedWinnerIndex()
+	_u.mutation.SetHedgedWinnerIndex(v)
+	return _u
+}
+
+// SetNillableHedgedWinnerIndex sets the "hedged_winner_index" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableHedgedWinnerIndex(v *int) *UsageLogUpdate {
+	if v != nil {
+		_u.SetHedgedWinnerIndex(*v)
+	}
+	return _u
+}
+
+// AddHedgedWinnerIndex adds value to the "hedged_winner_index" field.
+func (_u *UsageLogUpdate) AddHedgedWinnerIndex(v int) *UsageLogUpdate {
+	_u.mutation.AddHedgedWinnerIndex(v)
+	return _u
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (_u *UsageLogUpdate) ClearHedgedWinnerIndex() *UsageLogUpdate {
+	_u.mutation.ClearHedgedWinnerIndex()
+	return _u
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (_u *UsageLogUpdate) SetHedgedCanceledCount(v int) *UsageLogUpdate {
+	_u.mutation.ResetHedgedCanceledCount()
+	_u.mutation.SetHedgedCanceledCount(v)
+	return _u
+}
+
+// SetNillableHedgedCanceledCount sets the "hedged_canceled_count" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableHedgedCanceledCount(v *int) *UsageLogUpdate {
+	if v != nil {
+		_u.SetHedgedCanceledCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedCanceledCount adds value to the "hedged_canceled_count" field.
+func (_u *UsageLogUpdate) AddHedgedCanceledCount(v int) *UsageLogUpdate {
+	_u.mutation.AddHedgedCanceledCount(v)
+	return _u
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (_u *UsageLogUpdate) SetHedgedErrorCount(v int) *UsageLogUpdate {
+	_u.mutation.ResetHedgedErrorCount()
+	_u.mutation.SetHedgedErrorCount(v)
+	return _u
+}
+
+// SetNillableHedgedErrorCount sets the "hedged_error_count" field if the given value is not nil.
+func (_u *UsageLogUpdate) SetNillableHedgedErrorCount(v *int) *UsageLogUpdate {
+	if v != nil {
+		_u.SetHedgedErrorCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedErrorCount adds value to the "hedged_error_count" field.
+func (_u *UsageLogUpdate) AddHedgedErrorCount(v int) *UsageLogUpdate {
+	_u.mutation.AddHedgedErrorCount(v)
+	return _u
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (_u *UsageLogUpdate) SetHedgedAttempts(v []map[string]interface{}) *UsageLogUpdate {
+	_u.mutation.SetHedgedAttempts(v)
+	return _u
+}
+
+// AppendHedgedAttempts appends value to the "hedged_attempts" field.
+func (_u *UsageLogUpdate) AppendHedgedAttempts(v []map[string]interface{}) *UsageLogUpdate {
+	_u.mutation.AppendHedgedAttempts(v)
+	return _u
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (_u *UsageLogUpdate) ClearHedgedAttempts() *UsageLogUpdate {
+	_u.mutation.ClearHedgedAttempts()
+	return _u
+}
+
 // SetUserAgent sets the "user_agent" field.
 func (_u *UsageLogUpdate) SetUserAgent(v string) *UsageLogUpdate {
 	_u.mutation.SetUserAgent(v)
@@ -1161,6 +1284,47 @@ func (_u *UsageLogUpdate) sqlSave(ctx context.Context) (_node int, err error) {
 	}
 	if _u.mutation.FirstTokenMsCleared() {
 		_spec.ClearField(usagelog.FieldFirstTokenMs, field.TypeInt)
+	}
+	if value, ok := _u.mutation.HedgedEnabled(); ok {
+		_spec.SetField(usagelog.FieldHedgedEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgedAttemptCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttemptCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedAttemptCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedAttemptCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedWinnerIndex(); ok {
+		_spec.SetField(usagelog.FieldHedgedWinnerIndex, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedWinnerIndex(); ok {
+		_spec.AddField(usagelog.FieldHedgedWinnerIndex, field.TypeInt, value)
+	}
+	if _u.mutation.HedgedWinnerIndexCleared() {
+		_spec.ClearField(usagelog.FieldHedgedWinnerIndex, field.TypeInt)
+	}
+	if value, ok := _u.mutation.HedgedCanceledCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedCanceledCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedCanceledCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedCanceledCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedErrorCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedErrorCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedErrorCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedErrorCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedAttempts(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttempts, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedHedgedAttempts(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, usagelog.FieldHedgedAttempts, value)
+		})
+	}
+	if _u.mutation.HedgedAttemptsCleared() {
+		_spec.ClearField(usagelog.FieldHedgedAttempts, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(usagelog.FieldUserAgent, field.TypeString, value)
@@ -2004,6 +2168,128 @@ func (_u *UsageLogUpdateOne) ClearFirstTokenMs() *UsageLogUpdateOne {
 	return _u
 }
 
+// SetHedgedEnabled sets the "hedged_enabled" field.
+func (_u *UsageLogUpdateOne) SetHedgedEnabled(v bool) *UsageLogUpdateOne {
+	_u.mutation.SetHedgedEnabled(v)
+	return _u
+}
+
+// SetNillableHedgedEnabled sets the "hedged_enabled" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableHedgedEnabled(v *bool) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetHedgedEnabled(*v)
+	}
+	return _u
+}
+
+// SetHedgedAttemptCount sets the "hedged_attempt_count" field.
+func (_u *UsageLogUpdateOne) SetHedgedAttemptCount(v int) *UsageLogUpdateOne {
+	_u.mutation.ResetHedgedAttemptCount()
+	_u.mutation.SetHedgedAttemptCount(v)
+	return _u
+}
+
+// SetNillableHedgedAttemptCount sets the "hedged_attempt_count" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableHedgedAttemptCount(v *int) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetHedgedAttemptCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedAttemptCount adds value to the "hedged_attempt_count" field.
+func (_u *UsageLogUpdateOne) AddHedgedAttemptCount(v int) *UsageLogUpdateOne {
+	_u.mutation.AddHedgedAttemptCount(v)
+	return _u
+}
+
+// SetHedgedWinnerIndex sets the "hedged_winner_index" field.
+func (_u *UsageLogUpdateOne) SetHedgedWinnerIndex(v int) *UsageLogUpdateOne {
+	_u.mutation.ResetHedgedWinnerIndex()
+	_u.mutation.SetHedgedWinnerIndex(v)
+	return _u
+}
+
+// SetNillableHedgedWinnerIndex sets the "hedged_winner_index" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableHedgedWinnerIndex(v *int) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetHedgedWinnerIndex(*v)
+	}
+	return _u
+}
+
+// AddHedgedWinnerIndex adds value to the "hedged_winner_index" field.
+func (_u *UsageLogUpdateOne) AddHedgedWinnerIndex(v int) *UsageLogUpdateOne {
+	_u.mutation.AddHedgedWinnerIndex(v)
+	return _u
+}
+
+// ClearHedgedWinnerIndex clears the value of the "hedged_winner_index" field.
+func (_u *UsageLogUpdateOne) ClearHedgedWinnerIndex() *UsageLogUpdateOne {
+	_u.mutation.ClearHedgedWinnerIndex()
+	return _u
+}
+
+// SetHedgedCanceledCount sets the "hedged_canceled_count" field.
+func (_u *UsageLogUpdateOne) SetHedgedCanceledCount(v int) *UsageLogUpdateOne {
+	_u.mutation.ResetHedgedCanceledCount()
+	_u.mutation.SetHedgedCanceledCount(v)
+	return _u
+}
+
+// SetNillableHedgedCanceledCount sets the "hedged_canceled_count" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableHedgedCanceledCount(v *int) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetHedgedCanceledCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedCanceledCount adds value to the "hedged_canceled_count" field.
+func (_u *UsageLogUpdateOne) AddHedgedCanceledCount(v int) *UsageLogUpdateOne {
+	_u.mutation.AddHedgedCanceledCount(v)
+	return _u
+}
+
+// SetHedgedErrorCount sets the "hedged_error_count" field.
+func (_u *UsageLogUpdateOne) SetHedgedErrorCount(v int) *UsageLogUpdateOne {
+	_u.mutation.ResetHedgedErrorCount()
+	_u.mutation.SetHedgedErrorCount(v)
+	return _u
+}
+
+// SetNillableHedgedErrorCount sets the "hedged_error_count" field if the given value is not nil.
+func (_u *UsageLogUpdateOne) SetNillableHedgedErrorCount(v *int) *UsageLogUpdateOne {
+	if v != nil {
+		_u.SetHedgedErrorCount(*v)
+	}
+	return _u
+}
+
+// AddHedgedErrorCount adds value to the "hedged_error_count" field.
+func (_u *UsageLogUpdateOne) AddHedgedErrorCount(v int) *UsageLogUpdateOne {
+	_u.mutation.AddHedgedErrorCount(v)
+	return _u
+}
+
+// SetHedgedAttempts sets the "hedged_attempts" field.
+func (_u *UsageLogUpdateOne) SetHedgedAttempts(v []map[string]interface{}) *UsageLogUpdateOne {
+	_u.mutation.SetHedgedAttempts(v)
+	return _u
+}
+
+// AppendHedgedAttempts appends value to the "hedged_attempts" field.
+func (_u *UsageLogUpdateOne) AppendHedgedAttempts(v []map[string]interface{}) *UsageLogUpdateOne {
+	_u.mutation.AppendHedgedAttempts(v)
+	return _u
+}
+
+// ClearHedgedAttempts clears the value of the "hedged_attempts" field.
+func (_u *UsageLogUpdateOne) ClearHedgedAttempts() *UsageLogUpdateOne {
+	_u.mutation.ClearHedgedAttempts()
+	return _u
+}
+
 // SetUserAgent sets the "user_agent" field.
 func (_u *UsageLogUpdateOne) SetUserAgent(v string) *UsageLogUpdateOne {
 	_u.mutation.SetUserAgent(v)
@@ -2537,6 +2823,47 @@ func (_u *UsageLogUpdateOne) sqlSave(ctx context.Context) (_node *UsageLog, err 
 	}
 	if _u.mutation.FirstTokenMsCleared() {
 		_spec.ClearField(usagelog.FieldFirstTokenMs, field.TypeInt)
+	}
+	if value, ok := _u.mutation.HedgedEnabled(); ok {
+		_spec.SetField(usagelog.FieldHedgedEnabled, field.TypeBool, value)
+	}
+	if value, ok := _u.mutation.HedgedAttemptCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttemptCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedAttemptCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedAttemptCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedWinnerIndex(); ok {
+		_spec.SetField(usagelog.FieldHedgedWinnerIndex, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedWinnerIndex(); ok {
+		_spec.AddField(usagelog.FieldHedgedWinnerIndex, field.TypeInt, value)
+	}
+	if _u.mutation.HedgedWinnerIndexCleared() {
+		_spec.ClearField(usagelog.FieldHedgedWinnerIndex, field.TypeInt)
+	}
+	if value, ok := _u.mutation.HedgedCanceledCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedCanceledCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedCanceledCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedCanceledCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedErrorCount(); ok {
+		_spec.SetField(usagelog.FieldHedgedErrorCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.AddedHedgedErrorCount(); ok {
+		_spec.AddField(usagelog.FieldHedgedErrorCount, field.TypeInt, value)
+	}
+	if value, ok := _u.mutation.HedgedAttempts(); ok {
+		_spec.SetField(usagelog.FieldHedgedAttempts, field.TypeJSON, value)
+	}
+	if value, ok := _u.mutation.AppendedHedgedAttempts(); ok {
+		_spec.AddModifier(func(u *sql.UpdateBuilder) {
+			sqljson.Append(u, usagelog.FieldHedgedAttempts, value)
+		})
+	}
+	if _u.mutation.HedgedAttemptsCleared() {
+		_spec.ClearField(usagelog.FieldHedgedAttempts, field.TypeJSON)
 	}
 	if value, ok := _u.mutation.UserAgent(); ok {
 		_spec.SetField(usagelog.FieldUserAgent, field.TypeString, value)

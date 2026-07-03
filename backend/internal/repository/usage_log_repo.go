@@ -30,7 +30,7 @@ import (
 	"golang.org/x/sync/errgroup"
 )
 
-const usageLogSelectColumns = "id, user_id, api_key_id, account_id, request_id, model, requested_model, upstream_model, group_id, subscription_id, input_tokens, output_tokens, cache_creation_tokens, cache_read_tokens, cache_creation_5m_tokens, cache_creation_1h_tokens, image_output_tokens, image_output_cost, input_cost, output_cost, cache_creation_cost, cache_read_cost, total_cost, actual_cost, rate_multiplier, account_rate_multiplier, billing_type, request_type, stream, openai_ws_mode, duration_ms, first_token_ms, user_agent, ip_address, image_count, image_size, image_input_size, image_output_size, image_size_source, image_size_breakdown, service_tier, reasoning_effort, inbound_endpoint, upstream_endpoint, cache_ttl_overridden, channel_id, model_mapping_chain, billing_tier, billing_mode, account_stats_cost, created_at"
+const usageLogSelectColumns = "id, user_id, api_key_id, account_id, request_id, model, requested_model, upstream_model, group_id, subscription_id, input_tokens, output_tokens, cache_creation_tokens, cache_read_tokens, cache_creation_5m_tokens, cache_creation_1h_tokens, image_output_tokens, image_output_cost, input_cost, output_cost, cache_creation_cost, cache_read_cost, total_cost, actual_cost, rate_multiplier, account_rate_multiplier, billing_type, request_type, stream, openai_ws_mode, duration_ms, first_token_ms, hedged_enabled, hedged_attempt_count, hedged_winner_index, hedged_canceled_count, hedged_error_count, hedged_attempts, user_agent, ip_address, image_count, image_size, image_input_size, image_output_size, image_size_source, image_size_breakdown, service_tier, reasoning_effort, inbound_endpoint, upstream_endpoint, cache_ttl_overridden, channel_id, model_mapping_chain, billing_tier, billing_mode, account_stats_cost, created_at"
 
 // usageLogInsertArgTypes must stay in the same order as:
 //  1. prepareUsageLogInsert().args
@@ -71,6 +71,12 @@ var usageLogInsertArgTypes = [...]string{
 	"boolean",     // openai_ws_mode
 	"integer",     // duration_ms
 	"integer",     // first_token_ms
+	"boolean",     // hedged_enabled
+	"integer",     // hedged_attempt_count
+	"integer",     // hedged_winner_index
+	"integer",     // hedged_canceled_count
+	"integer",     // hedged_error_count
+	"jsonb",       // hedged_attempts
 	"text",        // user_agent
 	"text",        // ip_address
 	"integer",     // image_count
@@ -388,6 +394,12 @@ func (r *usageLogRepository) createSingle(ctx context.Context, sqlq sqlExecutor,
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -413,7 +425,7 @@ func (r *usageLogRepository) createSingle(ctx context.Context, sqlq sqlExecutor,
 			$10, $11, $12, $13,
 			$14, $15, $16, $17,
 			$18, $19, $20, $21, $22, $23,
-			$24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50
+			$24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56
 		)
 		ON CONFLICT (request_id, api_key_id) DO NOTHING
 		RETURNING id, created_at
@@ -830,6 +842,12 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -911,6 +929,12 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 				openai_ws_mode,
 				duration_ms,
 				first_token_ms,
+				hedged_enabled,
+				hedged_attempt_count,
+				hedged_winner_index,
+				hedged_canceled_count,
+				hedged_error_count,
+				hedged_attempts,
 				user_agent,
 				ip_address,
 				image_count,
@@ -963,6 +987,12 @@ func buildUsageLogBatchInsertQuery(keys []string, preparedByKey map[string]usage
 				openai_ws_mode,
 				duration_ms,
 				first_token_ms,
+				hedged_enabled,
+				hedged_attempt_count,
+				hedged_winner_index,
+				hedged_canceled_count,
+				hedged_error_count,
+				hedged_attempts,
 				user_agent,
 				ip_address,
 				image_count,
@@ -1055,6 +1085,12 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -1133,6 +1169,12 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -1185,6 +1227,12 @@ func buildUsageLogBestEffortInsertQuery(preparedList []usageLogInsertPrepared) (
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -1245,6 +1293,12 @@ func execUsageLogInsertNoResult(ctx context.Context, sqlq sqlExecutor, prepared 
 			openai_ws_mode,
 			duration_ms,
 			first_token_ms,
+			hedged_enabled,
+			hedged_attempt_count,
+			hedged_winner_index,
+			hedged_canceled_count,
+			hedged_error_count,
+			hedged_attempts,
 			user_agent,
 			ip_address,
 			image_count,
@@ -1270,7 +1324,7 @@ func execUsageLogInsertNoResult(ctx context.Context, sqlq sqlExecutor, prepared 
 			$10, $11, $12, $13,
 			$14, $15, $16, $17,
 			$18, $19, $20, $21, $22, $23,
-			$24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50
+			$24, $25, $26, $27, $28, $29, $30, $31, $32, $33, $34, $35, $36, $37, $38, $39, $40, $41, $42, $43, $44, $45, $46, $47, $48, $49, $50, $51, $52, $53, $54, $55, $56
 		)
 		ON CONFLICT (request_id, api_key_id) DO NOTHING
 	`, prepared.args...)
@@ -1294,6 +1348,11 @@ func prepareUsageLogInsert(log *service.UsageLog) usageLogInsertPrepared {
 	subscriptionID := nullInt64(log.SubscriptionID)
 	duration := nullInt(log.DurationMs)
 	firstToken := nullInt(log.FirstTokenMs)
+	hedgedAttemptCount := log.HedgedAttemptCount
+	if hedgedAttemptCount <= 0 {
+		hedgedAttemptCount = 1
+	}
+	hedgedAttempts := nullHedgedAttemptsJSON(log.HedgedAttempts)
 	userAgent := nullString(log.UserAgent)
 	ipAddress := nullString(log.IPAddress)
 	imageSize := nullString(log.ImageSize)
@@ -1357,6 +1416,12 @@ func prepareUsageLogInsert(log *service.UsageLog) usageLogInsertPrepared {
 			log.OpenAIWSMode,
 			duration,
 			firstToken,
+			log.HedgedEnabled,
+			hedgedAttemptCount,
+			nullInt(log.HedgedWinnerIndex),
+			log.HedgedCanceledCount,
+			log.HedgedErrorCount,
+			hedgedAttempts,
 			userAgent,
 			ipAddress,
 			log.ImageCount,
@@ -4285,6 +4350,12 @@ func scanUsageLog(scanner interface{ Scan(...any) error }) (*service.UsageLog, e
 		openaiWSMode          bool
 		durationMs            sql.NullInt64
 		firstTokenMs          sql.NullInt64
+		hedgedEnabled         bool
+		hedgedAttemptCount    int
+		hedgedWinnerIndex     sql.NullInt64
+		hedgedCanceledCount   int
+		hedgedErrorCount      int
+		hedgedAttempts        sql.NullString
 		userAgent             sql.NullString
 		ipAddress             sql.NullString
 		imageCount            int
@@ -4339,6 +4410,12 @@ func scanUsageLog(scanner interface{ Scan(...any) error }) (*service.UsageLog, e
 		&openaiWSMode,
 		&durationMs,
 		&firstTokenMs,
+		&hedgedEnabled,
+		&hedgedAttemptCount,
+		&hedgedWinnerIndex,
+		&hedgedCanceledCount,
+		&hedgedErrorCount,
+		&hedgedAttempts,
 		&userAgent,
 		&ipAddress,
 		&imageCount,
@@ -4387,6 +4464,12 @@ func scanUsageLog(scanner interface{ Scan(...any) error }) (*service.UsageLog, e
 		AccountRateMultiplier: nullFloat64Ptr(accountRateMultiplier),
 		BillingType:           int8(billingType),
 		RequestType:           service.RequestTypeFromInt16(requestTypeRaw),
+		HedgedEnabled:         hedgedEnabled,
+		HedgedAttemptCount:    hedgedAttemptCount,
+		HedgedWinnerIndex:     nullInt64PtrAsInt(hedgedWinnerIndex),
+		HedgedCanceledCount:   hedgedCanceledCount,
+		HedgedErrorCount:      hedgedErrorCount,
+		HedgedAttempts:        hedgedAttemptsFromNullJSON(hedgedAttempts),
 		ImageCount:            imageCount,
 		CacheTTLOverridden:    cacheTTLOverridden,
 		CreatedAt:             createdAt,
@@ -4610,6 +4693,39 @@ func nullStringIntMapJSON(v map[string]int) any {
 		return nil
 	}
 	return string(payload)
+}
+
+func nullHedgedAttemptsJSON(v []service.HedgedAttemptLog) any {
+	if len(v) == 0 {
+		return nil
+	}
+	payload, err := json.Marshal(v)
+	if err != nil {
+		return nil
+	}
+	return string(payload)
+}
+
+func nullInt64PtrAsInt(v sql.NullInt64) *int {
+	if !v.Valid {
+		return nil
+	}
+	out := int(v.Int64)
+	return &out
+}
+
+func hedgedAttemptsFromNullJSON(v sql.NullString) []service.HedgedAttemptLog {
+	if !v.Valid || strings.TrimSpace(v.String) == "" {
+		return nil
+	}
+	var out []service.HedgedAttemptLog
+	if err := json.Unmarshal([]byte(v.String), &out); err != nil {
+		return nil
+	}
+	if len(out) == 0 {
+		return nil
+	}
+	return out
 }
 
 func stringIntMapFromNullJSON(v sql.NullString) map[string]int {
